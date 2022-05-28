@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+    <head>
+        <title>Login</title>
+    </head>
+
+    <body class="text-center">
+        <main class="form-signin">
+              <img class="mb-4" src="/assets/img/Avatar.jpeg" id="tema" value="1" width="72" height="57">
+              <h1 class="h3 mb-3 fw-normal" style="color: white;">Inicie sesión</h1>
+          
+              <div class="form-floating">
+                <input type="email" class="form-control" id="login-name" placeholder="name@example.com" #email>
+                <label for="floatingInput" style="color: white;">Nombre de usuario</label>
+              </div>
+              <div class="form-floating">
+                <input type="password" class="form-control" id="login-pass" placeholder="Password" #password>
+                <label for="floatingPassword" style="color: white;">Contraseña</label>
+              </div>
+              <button class="w-100 btn btn-lg btn-primary" id="log-bttn" (click)="onSubmit(email.value, password.value)">Continuar</button>
+          </main>
+
+          <footer>
+            <ul class="footer-ul">
+              <li><a class="footer-a" href="mailto: carlos.gonzalez@edu.upct.es">Carlos</a></li>
+              <li><a class="footer-a" href="mailto: franciscojavier.fernandez@edu.upct.es">Javi</a></li>
+              <li><a class="footer-a" href="https://github.com/daperber/grupo1.git">Github</a></li>
+              <li><div class="frog"><a class="footer-a" href="https://es.wikipedia.org/wiki/Sargento_Keroro">🐸</a></div></li>
+            </ul>
+          </footer>
+
+    </body>
+    <script src="/temas.js"></script>
+    <script src="script/login.js"></script>
+</html>
