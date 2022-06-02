@@ -12,8 +12,12 @@ import (
 var router *mux.Router
 
 func initHandlers() {
-	router.HandleFunc("/api/users", controller.GetAllUsers).Methods("GET")
-	router.HandleFunc("/api/user/{uid}", controller.GetUser).Methods("GET")
+	router.HandleFunc("/api/usuarios", controller.GetAllUsers).Methods("GET")
+	router.HandleFunc("/api/usuario/{uid}", controller.GetUser).Methods("GET")
+
+	router.HandleFunc("/api/usuarios", controller.CreateUser).Methods("POST")
+	router.HandleFunc("/api/usuarios", controller.UpdateUser).Methods("PUT")
+	router.HandleFunc("/api/usuarios/{id}", controller.DeleteUser).Methods("DELETE")
 }
 
 func Start() {
