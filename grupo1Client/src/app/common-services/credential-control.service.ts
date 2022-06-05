@@ -12,9 +12,19 @@ export class CredentialControlService {
 
   url = 'https://labinfsoft.herokuapp.com';
   urlLogin = this.url + '/api/auth/login';
-  urlGetVideos = this.url + '/api/videos?limite=1&desde=0';
+  urlGetVideosAdmin = this.url + '/api/videos?limite=1&desde=0';
+  urlGetVideosUser = this.url + '/api/videos/padre?limite=1&desde=0';
+  urlFull = this.urlGetVideosAdmin;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    if(localStorage.getItem('Role') != undefined){
+      let rol = localStorage.getItem('Role');
+      if(rol?.includes('ADMIN_ROLE'))
+        this.urlFull = this.urlGetVideosAdmin;
+      else
+        this.urlFull = this.urlGetVideosUser;
+    }
+  }
 
   sendCredential(email: string, password: string) {
 
@@ -37,7 +47,6 @@ export class CredentialControlService {
   }
 
   checkCredential() {
-
     const body_content = {
       "token": localStorage.getItem("Token")
     }
@@ -51,6 +60,11 @@ export class CredentialControlService {
     console.log(httpOptions);
 
 
-    return this.http.get(this.urlGetVideos, httpOptions) as Observable<GetVideoInterface>;
+    return this.http.get(this.urlFull, httpOptions) as Observable<GetVideoInterface>;
+  }
+
+  logOut(){
+    localStorage.clear();
+    location.assign("/Login");
   }
 }

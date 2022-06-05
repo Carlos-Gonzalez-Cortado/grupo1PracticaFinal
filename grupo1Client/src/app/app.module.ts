@@ -8,13 +8,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { StartComponent } from './start/start.component';
 import { SafePipe } from './common-services/safe-pipe.service';
 import { BsDropdownModule} from 'ngx-bootstrap/dropdown';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     StartComponent,
-    SafePipe
+    SafePipe,
+    AdminComponent
   ],
   imports: [
     BsDropdownModule.forRoot(),

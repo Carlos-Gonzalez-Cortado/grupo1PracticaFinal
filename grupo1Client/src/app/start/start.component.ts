@@ -23,6 +23,7 @@ export class StartComponent implements OnInit {
   filteredCategoryList:Array<string> = [];
   filteredVideosByCategory:Array<VideosInterface> = [];
   filteredVideosBySearch:Array<VideosInterface> = [];
+  isAdmin:boolean = false;
 
   constructor(
     private cred: CredentialControlService, 
@@ -47,6 +48,8 @@ export class StartComponent implements OnInit {
         location.assign('/Login')
       }
     );
+    if(localStorage.getItem('Role')?.includes('ADMIN')) 
+      this.isAdmin = true;
   }
 
   private getVideoList(){
@@ -76,7 +79,9 @@ export class StartComponent implements OnInit {
     )
   }
 
-  /** JUNTAR LAS DOS IMPLEMENTACIONES */
+  logOut(){
+    this.cred.logOut();
+  }
 
   filterSearch(data: string) {
     this.filteredVideosBySearch = this.videoList.filter(

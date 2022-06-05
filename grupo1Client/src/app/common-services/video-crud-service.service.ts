@@ -10,9 +10,20 @@ import { CredentialControlService } from './credential-control.service';
 export class VideoCrudServiceService {
 
   url = 'https://labinfsoft.herokuapp.com';
-  urlGetVideos = this.url + '/api/videos';
+  urlGetVideosAdmin = this.url + '/api/videos';
+  urlGetVideosUser = this.url + '/api/videos/padre';
+  urlGetVideos = this.urlGetVideosAdmin;
 
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient) { 
+    if(localStorage.getItem('Role') != undefined){
+      let rol = localStorage.getItem('Role');
+      if(rol?.includes('ADMIN_ROLE'))
+        this.urlGetVideos = this.urlGetVideosAdmin;
+      else
+        this.urlGetVideos = this.urlGetVideosUser;
+    }
+  }
 
   getVideos(limite:number, desde:number){
 

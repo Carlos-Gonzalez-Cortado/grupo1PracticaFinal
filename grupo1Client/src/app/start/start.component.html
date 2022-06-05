@@ -30,11 +30,11 @@
                 Usuario
               </a>
               <ul class="dropdown-menu p-2 text-white" aria-labelledby="navbarDropdown">
-                <li id="panel-de-control" hidden><a class="dropdown-item" href="/adminpanel/paneldecontrol.html"> Panel de control</a></li>
-                <li id="separador-admin" hidden>
+                <li id="panel-de-control" [hidden]="!isAdmin"><a class="dropdown-item" href="/Admin"> Panel de control</a></li>
+                <li id="separador-admin" [hidden]="!isAdmin">
                   <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" id="logout_btn">Cerrar sesión</a></li>
+                <li><a class="dropdown-item" id="logout_btn" (click) = "logOut();">Cerrar sesión</a></li>
               </ul>
             </li>
             <li class="d-flex nav-item dropdown" id="filterDropdown">
