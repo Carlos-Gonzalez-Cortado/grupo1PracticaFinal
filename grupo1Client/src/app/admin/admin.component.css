@@ -460,7 +460,6 @@ header .image-text .profession{
   order: 9;
   flex-grow: 1;
   width: 100%;
-  height: 100%;
   display: none;
   padding: 1rem;
   background: var(--sidebar-color);
@@ -550,9 +549,9 @@ body {
   border: none;
   border-radius: 15px;
   box-shadow: 0 9px #999;
-  position: absolute;
-  right: 35px;
-  top: 215px;
+  position: relative;
+  left: 345px;
+  bottom: 50px;
 }
 
 .form-button:hover {opacity: 50%;}

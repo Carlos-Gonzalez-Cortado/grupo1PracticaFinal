@@ -39,35 +39,35 @@
 
                 <ul class="menu-links">
                     <li class="nav-link" id="videos-btn" value="1">
-                        <a href="#" value="1">
+                        <a value="1" (click)="setActiveSection(1)">
                             <i class="bx bx-video icon" value="1"></i>
                             <span class="text nav-text" value="1">Vídeos</span>
                         </a>
                     </li>
 
                     <li class="nav-link" id="categoria-btn" value="2">
-                        <a href="#" value="2">
+                        <a value="2" (click)="setActiveSection(2)">
                             <i class="bx bx-collection icon" value="2"></i>
                             <span class="text nav-text"  value="2">Categorías</span>
                         </a>
                     </li>
 
                     <li class="nav-link" id="usuario-btn" value="3">
-                        <a href="#" value="3">
+                        <a value="3" (click)="setActiveSection(3)">
                             <i class="bx bx-user icon" value="3"></i>
                             <span class="text nav-text" value="3">Usuarios</span>
                         </a>
                     </li>
 
                     <li class="nav-link" id="mod-btn" value="4">
-                        <a href="#" value="5">
+                        <a value="4" (click)="setActiveSection(4)">
                             <i class="bx bx-edit-alt icon" value="4"></i>
                             <span class="text nav-text" value="4">Modificar</span>
                         </a>
                     </li>
 
                     <li class="nav-link" id="crear-btn" value="5">
-                        <a href="#" value="5">
+                        <a value="5" (click)="setActiveSection(5)">
                             <i class="bx bx-plus icon" value="5"></i>
                             <span class="text nav-text" value="5">Crear</span>
                         </a>
@@ -79,7 +79,7 @@
             <div class="bottom-content" style="margin-bottom: 20px;">
 
                 <li class="nav-link" id="atras-btn" value="4">
-                    <a href="/Start.html" value="4">
+                    <a href="/Start" value="4">
                         <i class="bx bx-arrow-back icon" value="4"></i>
                         <span class="text nav-text" value="4">Start</span>
                     </a>
@@ -87,9 +87,9 @@
 
 
                 <li class="" id="logout_btn">
-                    <a href="#">
+                    <a (click)="logOut();">
                         <i class="bx bx-log-out icon"></i>
-                        <span class="text nav-text">Cerrar sesión</span>
+                        <span class="text nav-text" >Cerrar sesión</span>
                     </a>
                 </li>
 
@@ -102,15 +102,15 @@
     <!-- Tarjetas de ususario --> 
     <section class="home user" id="usuario" hidden>
         <div class="text">Usuarios</div>
-            <div class="flip-card" id="us-1">
+            <div class="flip-card" id="us-1" *ngFor="let u of userList">
                 <div class="flip-card-inner">
                 <div class="flip-card-front">
-                    <h1 class="user-name">Usario 1</h1> 
-                    <p class="user-pass">Usuario y contraseña</p>
-                    <p class="user-type"> Tipo de ususario</p>
+                    <h1 class="user-name">{{ u.nombre }}</h1> 
+                    <p class="user-pass">{{ u.correo }}</p>
+                    <p class="user-type"> {{u.rol}}</p>
                 </div>
                 <div class="flip-card-back">
-                    <p class="user-name" style="margin-bottom: 1em; margin-top: 0.5em;">Usuario 1</p>
+                    <p class="user-name" style="margin-bottom: 1em; margin-top: 0.5em;">{{ u.nombre }}</p>
                     <button class="B-E user-edit"><span>Editar</span></button>
                     <button class="B-E user-delete" style="background-color: tomato;"><span>Eliminar</span></button>
                 </div>
@@ -132,8 +132,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="categorias">
-                <td class="cat-name">Clásica</td>
+            <tr class="categorias" *ngFor="let c of categoryList">
+                <td class="cat-name">{{c.nombre}}</td>
                 <td class="cat-count" style="padding-left: 5em;">3</td>
                 <td>
                     <button class= "B-C cat-edit"><span>Editar</span></button>
@@ -148,16 +148,16 @@
     <!-- Vídeos -->
     <section class="home vid" id="videos">
         <div class="text">Vídeos</div>
-        <div class = "videos">
+        <div class = "videos" *ngFor="let v of videoList">
             <div class="media">
-                <iframe width="220" height="120" src="https://www.youtube.com/embed/cwrKiLn7HVQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="220" height="120" [src]="v.url | safe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <div class="texto">
                 <div class = "titulo">
-                    ＳＴＡＲＧＡＺＩＮＧ - Lofi hip hop mix ~ Music to put you in a better mood 
+                    {{ v.nombre }}
                 </div>
                 <div class="usuario">
-                    Paco 
+                    {{ v.usuario.nombre }} 
                 </div>
                 <div class="opciones">
                     <button class= "B-V video-edit"><span>Editar</span></button>
@@ -193,8 +193,8 @@
 
                 <p class="input-label" for="form-categoria" style="margin-top: 1em;">Categoría:</p>
                 <div class="select" id="div-form-categoria-videos">
-                    <select id="form-categoria-videos">
-                         <option value="">Cat 1</option>
+                    <select id="form-categoria-videos" >
+                         <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
                     </select>
                     <span class="focus"></span>
                 </div>
@@ -214,9 +214,9 @@
                 </div>
 
                 <p class="input-label" for="form-categoria" style="margin-top: 1em;">Categorías actuales:</p>
-                <div class = "select" id="div-form-categoria-categoria">
-                    <select id="form-categoria-categoria">
-                        <option value="">NONE</option>
+                <div class = "select" id="div-form-categoria-categoria" >
+                    <select id="form-categoria-categoria" >
+                        <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
                     </select>
                     <span class="focus"></span>
                 </div>
