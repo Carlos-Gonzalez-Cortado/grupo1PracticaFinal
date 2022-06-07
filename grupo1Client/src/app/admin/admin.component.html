@@ -262,7 +262,7 @@
                 <form class="form-inputs">
                     <div class = "select" id="mod-div-id-video" style="margin-bottom: 1em; margin-left: 0.75;">
                         <select id="mod-id-video">
-                            <option value="">Vídeo</option>
+                            <option [value]="v._id" *ngFor="let v of videoList">{{ v.nombre }}</option>
                         </select>
                         <span class="focus"></span>
                     </div>
@@ -271,7 +271,7 @@
                     <input id="mod-input-url" class="form-input-mod" type="url" placeholder="URL">
                     <div class = "select" id="mod-div-video-categoria" style="margin-bottom: 1em; margin-left: 0.75;">
                         <select id="mod-video-categoria">
-                            <option value="">Categoría</option>
+                            <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
                         </select>
                         <span class="focus"></span>
                     </div>
@@ -285,7 +285,7 @@
                 <form class="form-inputs">
                     <div class = "select" id="mod-div-id-categoria" style="margin-bottom: 1em; margin-left: 0.75;">
                         <select id="mod-id-categoria">
-                            <option value="">Categoría</option>
+                            <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
                         </select>
                         <span class="focus"></span>
                     </div>
@@ -301,7 +301,7 @@
                 <form class="form-inputs">
                     <div class = "select" id="mod-div-id-usuario" style="margin-bottom: 1em; margin-left: 0.75;">
                         <select id="mod-id-usuario">
-                            <option value="">Usuario</option>
+                            <option [value]="u.uid" *ngFor="let u of userList">{{ u.nombre }}</option>
                         </select>
                         <span class="focus"></span>
                     </div>
