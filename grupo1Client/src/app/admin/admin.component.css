@@ -690,7 +690,13 @@ select:focus + .focus {
 
 .sidebar li a:hover{
   background-color: var(--primary-color);
+  cursor: pointer;
 }
+
+.sidebar li a:active{
+  background-color: var(--primary-color);
+}
+
 .sidebar li a:hover .icon,
 .sidebar li a:hover .text{
   color: var(--text-color);
