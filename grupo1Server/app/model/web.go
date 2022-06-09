@@ -22,8 +22,8 @@ type User struct {
 }
 
 type TokenDetails struct {
-	TOKEN string `json:"token"`
-	USER  User
+	TOKEN   string `json:"token"`
+	USUARIO User   `json:"usuario"`
 }
 
 func GetAllUsers() ([]User, error) {
@@ -242,8 +242,8 @@ func GenerateToken(nombre string, password string) (TokenDetails, error) {
 	}
 
 	tokenDetails = TokenDetails{
-		TOKEN: authToken,
-		USER:  userDetails,
+		TOKEN:   authToken,
+		USUARIO: userDetails,
 	}
 
 	return tokenDetails, nil

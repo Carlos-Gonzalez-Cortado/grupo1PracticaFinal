@@ -152,6 +152,7 @@ func AuthenticationsHandler(w http.ResponseWriter, r *http.Request) {
 		eneableCors(&w)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
+		eneableCors(&w)
 
 		fmt.Print(w.Header())
 
