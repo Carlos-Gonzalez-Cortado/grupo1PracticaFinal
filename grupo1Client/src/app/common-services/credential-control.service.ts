@@ -10,7 +10,7 @@ import { GetVideoInterface } from '../interfaces/get-video-interface';
 
 export class CredentialControlService {
 
-  url = 'http://localhost:3200';
+  url = 'http://192.168.195.3:3200';
   urlLogin = this.url + '/api/authentications';
   urlGetVideosAdmin = this.url + '/api/videos?limite=1&desde=0';
   urlGetVideosUser = this.url + '/api/videos/padre?limite=1&desde=0';
@@ -58,7 +58,6 @@ export class CredentialControlService {
     };
 
     console.log(httpOptions);
-
 
     return this.http.get(this.urlFull, httpOptions) as Observable<GetVideoInterface>;
   }
