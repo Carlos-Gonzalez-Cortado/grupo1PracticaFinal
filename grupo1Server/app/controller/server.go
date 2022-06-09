@@ -15,9 +15,13 @@ func initHandlers() {
 	router.HandleFunc("/api/usuarios", controller.GetAllUsers).Methods("GET")
 	router.HandleFunc("/api/usuario/{uid}", controller.GetUser).Methods("GET")
 
-	router.HandleFunc("/api/usuarios", controller.CreateUser).Methods("POST")
+	//	router.HandleFunc("/api/usuarios", controller.CreateUser).Methods("POST")
 	router.HandleFunc("/api/usuarios", controller.UpdateUser).Methods("PUT")
 	router.HandleFunc("/api/usuarios/{id}", controller.DeleteUser).Methods("DELETE")
+
+	router.HandleFunc("/api/registrations", controller.RegistrationsHandler).Methods("POST")
+	router.HandleFunc("/api/authentications", controller.AuthenticationsHandler).Methods("POST")
+	router.HandleFunc("/api/test", controller.TestResourceHandler)
 }
 
 func Start() {
