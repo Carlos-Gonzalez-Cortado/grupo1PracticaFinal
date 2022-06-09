@@ -147,30 +147,34 @@ func RegistrationsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthenticationsHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	eneableCors(&w)
-
-	fmt.Print(w.Header())
-
-	dec := json.NewDecoder(r.Body)
-	var user model.User
-	err := dec.Decode(&user)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	if user.NOMBRE == "" || user.PASSWORD == "" {
-		fmt.Fprintf(w, "Please enter a valid username and password.\r\n")
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
 	} else {
-		tokenDetails, err := model.GenerateToken(user.NOMBRE, user.PASSWORD)
+		w.Header().Set("Content-Type", "application/json")
+
+		fmt.Print(w.Header())
+
+		dec := json.NewDecoder(r.Body)
+		var user model.User
+		err := dec.Decode(&user)
 		if err != nil {
-			fmt.Fprintf(w, err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if user.NOMBRE == "" || user.PASSWORD == "" {
+			fmt.Fprintf(w, "Please enter a valid username and password.\r\n")
 		} else {
-			enc := json.NewEncoder(w)
-			enc.SetIndent("", "  ")
-			enc.Encode(tokenDetails)
+			tokenDetails, err := model.GenerateToken(user.NOMBRE, user.PASSWORD)
+			if err != nil {
+				fmt.Fprintf(w, err.Error())
+			} else {
+				enc := json.NewEncoder(w)
+				enc.SetIndent("", "  ")
+				enc.Encode(tokenDetails)
+			}
 		}
 	}
 }
