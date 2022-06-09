@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <title>Panel de control</title>
+
+    <script defer src="../script/logout.js"></script>
+    <script defer src="/script/adminpanel.js"></script>
+    <script defer src="/temas.js"></script>
+</head>
+
+<body>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="/assets/img/Avatar.jpeg" id="tema" value="1">
+                </span>
+
+                <div class="text logo-text">
+                    <span class="name">Admin</span>
+                    <span class="profession">Panel de control</span>
+                </div>
+            </div>
+            <i class="bx bx-chevron-right toggle"></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu">
+
+                <li class="search-box">
+                    <i class="bx bx-search icon"></i>
+                    <input type="text" id="buscar-navbar" placeholder="Buscar">
+                </li>
+
+                <ul class="menu-links">
+                    <li class="nav-link" id="videos-btn" value="1">
+                        <a value="1" (click)="setActiveSection(1)">
+                            <i class="bx bx-video icon" value="1"></i>
+                            <span class="text nav-text" value="1">Vídeos</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link" id="categoria-btn" value="2">
+                        <a value="2" (click)="setActiveSection(2)">
+                            <i class="bx bx-collection icon" value="2"></i>
+                            <span class="text nav-text"  value="2">Categorías</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link" id="usuario-btn" value="3">
+                        <a value="3" (click)="setActiveSection(3)">
+                            <i class="bx bx-user icon" value="3"></i>
+                            <span class="text nav-text" value="3">Usuarios</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link" id="mod-btn" value="4">
+                        <a value="4" (click)="setActiveSection(4)">
+                            <i class="bx bx-edit-alt icon" value="4"></i>
+                            <span class="text nav-text" value="4">Modificar</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link" id="crear-btn" value="5">
+                        <a value="5" (click)="setActiveSection(5)">
+                            <i class="bx bx-plus icon" value="5"></i>
+                            <span class="text nav-text" value="5">Crear</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="bottom-content" style="margin-bottom: 20px;">
+
+                <li class="nav-link" id="atras-btn" value="4">
+                    <a href="/Start" value="4">
+                        <i class="bx bx-arrow-back icon" value="4"></i>
+                        <span class="text nav-text" value="4">Start</span>
+                    </a>
+                </li>
+
+
+                <li class="" id="logout_btn">
+                    <a (click)="logOut();">
+                        <i class="bx bx-log-out icon"></i>
+                        <span class="text nav-text" >Cerrar sesión</span>
+                    </a>
+                </li>
+
+                
+            </div>
+        </div>
+
+    </nav>
+
+    <!-- Tarjetas de ususario --> 
+    <section class="home user" id="usuario" hidden>
+        <div class="text">Usuarios</div>
+            <div class="flip-card" id="us-1" *ngFor="let u of userList">
+                <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <h1 class="user-name">{{ u.nombre }}</h1> 
+                    <p class="user-pass">{{ u.correo }}</p>
+                    <p class="user-type"> {{u.rol}}</p>
+                </div>
+                <div class="flip-card-back">
+                    <p class="user-name" style="margin-bottom: 1em; margin-top: 0.5em;">{{ u.nombre }}</p>
+                    <button class="B-E user-edit"><span>Editar</span></button>
+                    <button class="B-E user-delete" style="background-color: tomato;"><span>Eliminar</span></button>
+                </div>
+                </div>
+            </div>
+    </section>
+    <!-------------------------->
+    
+
+    <!-- Tabla de categorias -->
+   <section class="home cater" id="categoria" hidden>
+    <div class="text">Categorías</div>
+        <table class="content-table">
+            <thead>
+            <tr>
+                <th>Categoría</th>
+                <th>Número de vídeos</th>
+                <th>Opciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="categorias" *ngFor="let c of categoryList">
+                <td class="cat-name">{{c.nombre}}</td>
+                <td class="cat-count" style="padding-left: 5em;">3</td>
+                <td>
+                    <button class= "B-C cat-edit"><span>Editar</span></button>
+                    <button class= "B-C cat-delete"  style="background-color: tomato;"><span>Eliminar</span></button> 
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+    <!------------------------->
+    
+    <!-- Vídeos -->
+    <section class="home vid" id="videos">
+        <div class="text">Vídeos</div>
+        <div class = "videos" *ngFor="let v of videoList">
+            <div class="media">
+                <iframe width="220" height="120" [src]="v.url | safe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="texto">
+                <div class = "titulo">
+                    {{ v.nombre }}
+                </div>
+                <div class="usuario">
+                    {{ v.usuario.nombre }} 
+                </div>
+                <div class="opciones">
+                    <button class= "B-V video-edit"><span>Editar</span></button>
+                    <button class= "B-V video-delete"  style="background-color: tomato;" (click)="sendDeleteVideo(v._id)"><span>Eliminar</span></button> 
+                </div>
+            </div>
+        </div>
+        <div style="height:4em;"></div>
+
+    </section>
+    <!------------>
+
+    <!----------Crear--------->
+    <section class="home crear" id="crear" hidden>
+        <div class="text">Crear</div>
+        <div class="tabs">
+        
+            <input type="radio" name="tabs" id="tabone" checked="checked">
+            <label for="tabone">Vídeos</label>
+            <div class="tab">
+                <h1>Datos del vídeo</h1>
+
+                <div id="div-form-nombre-videos">
+                    <p class ="input-label" for="form-nombre-video">Nombre:</p>
+                    <input class="form-input" type="text" id="form-nombre-videos" name="form-nombre" #crear_video_nombre><br>
+                </div>
+
+                <div id="div-form-url">
+                    <p class ="input-label" for="form-url">URL:</p>
+                    <input class="form-input" type="text" id="form-url" name="form-url" #crear_video_url><br>
+                </div>
+
+
+                <p class="input-label" for="form-categoria" style="margin-top: 1em;" >Categoría:</p>
+                <div class="select" id="div-form-categoria-videos" >
+                    <select id="form-categoria-videos" #crear_video_categoria>
+                         <option [value]="c._id" *ngFor="let c of categoryList" >{{ c.nombre }}</option>
+                    </select>
+                    <span class="focus"></span>
+                </div>
+
+                <input class="form-button" type="submit" value="Crear" (click)="sendCreateVideo(crear_video_nombre.value, crear_video_url.value, crear_video_categoria.value)">
+
+            </div>
+        
+            <input type="radio" name="tabs" id="tabtwo">
+            <label for="tabtwo">Categorías</label>
+            <div class="tab">
+                <h1>Datos de la categoría</h1>
+
+                <div id="div-form-nombre-categoria">
+                    <p class ="input-label" for="form-nombre-category">Nombre:</p>
+                    <input class="form-input" type="text" id="form-nombre-categoria" name="form-nombre"><br>
+                </div>
+
+                <p class="input-label" for="form-categoria" style="margin-top: 1em;">Categorías actuales:</p>
+                <div class = "select" id="div-form-categoria-categoria" >
+                    <select id="form-categoria-categoria" >
+                        <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
+                    </select>
+                    <span class="focus"></span>
+                </div>
+
+                <input class="form-button" type="submit" value="Crear">
+
+            </div>
+        
+            <input type="radio" name="tabs" id="tabthree">
+            <label for="tabthree">Usuarios</label>
+            <div class="tab">
+                <h1>Datos del usuario</h1>
+                <div id="div-form-nombre-usuario">
+                    <p class ="input-label" for="form-nombre-user">Nombre:</p>
+                    <input class="form-input" type="text" id="form-nombre-usuario" name="form-nombre"><br>
+                </div>
+
+                <div id="div-form-correo">
+                    <p class ="input-label" for="form-correo">Correo:</p>
+                    <input class="form-input" type="text" id="form-correo" name="form-correo"><br>
+                </div>
+
+                <div id="div-form-contraseña">
+                    <p class ="input-label" for="form-contraseña">Contraseña:</p>
+                    <input class="form-input" type="text" id="form-contraseña" name="form-contraseña"><br>
+                </div>
+
+                <input class="form-button" type="submit" value="Crear">
+
+            </div>
+        </div>
+    </section>
+    <!------------------------>
+
+    <!----------Modificar--------->
+    <section class="home modificar" id="modificar" hidden>
+        <div class="text">Modificar</div>
+        <div class="mod-tabs">
+
+            <input type="radio" name="mod-tabs" id="video-tab" checked="checked">
+            <label class="label-videos" for="video-tab">Vídeos</label>
+            <div class="mod-tab">
+                <form class="form-inputs">
+                    <div class = "select" id="mod-div-id-video" style="margin-bottom: 1em; margin-left: 0.75;">
+                        <select id="mod-id-video" #edit_video_id>
+                            <option [value]="v._id" *ngFor="let v of videoList">{{ v.nombre }}</option>
+                        </select>
+                        <span class="focus"></span>
+                    </div>
+                    <hr class="solid">
+                    <input id="mod-input-nombre-video" class="form-input-mod" type="text" placeholder="Nombre" #edit_video_nombre>
+                    <input id="mod-input-url" class="form-input-mod" type="url" placeholder="URL" #edit_video_url>
+                    <div class = "select" id="mod-div-video-categoria" style="margin-bottom: 1em; margin-left: 0.75;">
+                        <select id="mod-video-categoria" #video_edit_category>
+                            <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
+                        </select>
+                        <span class="focus"></span>
+                    </div>
+                    <button id="mod-boton-video" class="form-button-mod" type="button" (click)="sendEditVideo(edit_video_id.value, edit_video_nombre.value, edit_video_url.value, video_edit_category.value);">Modificar</button>
+                </form>
+            </div>
+
+            <input type="radio" name="mod-tabs" id="categoria-tab">
+            <label for="categoria-tab">Categorías</label>
+            <div class="mod-tab">
+                <form class="form-inputs">
+                    <div class = "select" id="mod-div-id-categoria" style="margin-bottom: 1em; margin-left: 0.75;">
+                        <select id="mod-id-categoria">
+                            <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
+                        </select>
+                        <span class="focus"></span>
+                    </div>
+                    <hr class="solid">
+                    <input id="mod-input-nombre-categoria" class="form-input-mod" type="text" placeholder="Nombre">
+                    <button id="mod-boton-categoria" class="form-button-mod" type="button">Modificar</button>
+                </form>
+            </div>
+
+            <input type="radio" name="mod-tabs" id="usuario-tab">
+            <label for="usuario-tab">Usuarios</label>
+            <div class="mod-tab">
+                <form class="form-inputs">
+                    <div class = "select" id="mod-div-id-usuario" style="margin-bottom: 1em; margin-left: 0.75;">
+                        <select id="mod-id-usuario">
+                            <option [value]="u.uid" *ngFor="let u of userList">{{ u.nombre }}</option>
+                        </select>
+                        <span class="focus"></span>
+                    </div>
+                    <hr class="solid">
+                    <input id="mod-input-nombre-usuario" class="form-input-mod" type="text" placeholder="Nombre">
+                    <input id="mod-input-correo" class="form-input-mod" type="email" placeholder="Correo">
+                    <input id="mod-input-contraseña" class="form-input-mod" type="text" placeholder="Contraseña">
+                    <button id="mod-boton-usuario" class="form-button-mod" type="button">Modificar</button>
+                </form>
+            </div>
+
+        </div>
+        
+    </section>
+    <!---------------------------->
+
+    <footer>
+        <ul class="footer-ul">
+          <li><a class="footer-a" href="mailto: carlos.gonzalez@edu.upct.es">Carlos</a></li>
+          <li><a class="footer-a" href="mailto: franciscojavier.fernandez@edu.upct.es">Javi</a></li>
+          <li><a class="footer-a" href="https://github.com/daperber/grupo1.git">Github</a></li>
+          <li><div class="frog"><a class="footer-a" href="https://es.wikipedia.org/wiki/Sargento_Keroro">🐸</a></div></li>
+        </ul>
+    </footer>
