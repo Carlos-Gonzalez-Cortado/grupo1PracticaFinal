@@ -20,6 +20,9 @@ export class AdminComponent implements OnInit {
   videoList: Array<VideosInterface> = [];
   categoryList: Array<Category> = [];
   userList: Array<User> = [];
+  filteredVideoList: Array<VideosInterface> = [];
+  filteredCategoryList: Array<Category> = [];
+  filteredUserList: Array<User> = [];
   totalVideos: number = 0;
 
   constructor(private cred: CredentialControlService,
@@ -69,6 +72,7 @@ export class AdminComponent implements OnInit {
     this.videoCrud.getVideos(this.totalVideos, 0).subscribe(
       res => {
         this.videoList = res['productos'];
+        this.filteredVideoList = this.videoList;
         console.log(res);
       },
       err => {
@@ -81,6 +85,7 @@ export class AdminComponent implements OnInit {
     this.catCrud.getCategories().subscribe(
       res => {
         this.categoryList = res['categorias'];
+        this.filteredCategoryList = this.categoryList;
         console.log(res);
       },
       err => {
@@ -93,6 +98,7 @@ export class AdminComponent implements OnInit {
     this.userCrud.getUsers().subscribe(
       res => {
         this.userList = res['usuarios'];
+        this.filteredUserList = this.userList;
         console.log(res);
       },
       err => {
@@ -154,6 +160,12 @@ export class AdminComponent implements OnInit {
   setEditCategory(id: string, nameElement: HTMLInputElement){
     let selectedCategory = this.categoryList.filter(x => x._id.includes(id))[0];
     nameElement.value = selectedCategory.nombre;
+  }
+
+  filterData(searchValue: string){
+    this.filteredCategoryList = this.categoryList.filter(x => x.nombre.toUpperCase().includes(searchValue.toUpperCase()));
+    this.filteredUserList = this.userList.filter(x => x.nombre.toUpperCase().includes(searchValue.toUpperCase()));
+    this.filteredVideoList = this.videoList.filter(x => x.nombre.toUpperCase().includes(searchValue.toUpperCase()));
   }
 
   /*

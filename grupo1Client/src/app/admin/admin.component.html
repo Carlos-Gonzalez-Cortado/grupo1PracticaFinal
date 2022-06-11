@@ -34,7 +34,7 @@
 
                 <li class="search-box">
                     <i class="bx bx-search icon"></i>
-                    <input type="text" id="buscar-navbar" placeholder="Buscar">
+                    <input type="text" id="buscar-navbar" placeholder="Buscar" (keyup)="filterData(search_bar.value)" #search_bar>
                 </li>
 
                 <ul class="menu-links">
@@ -102,7 +102,7 @@
     <!-- Tarjetas de ususario --> 
     <section class="home user" id="usuario" hidden>
         <div class="text">Usuarios</div>
-            <div class="flip-card" id="us-1" *ngFor="let u of userList">
+            <div class="flip-card" id="us-1" *ngFor="let u of filteredUserList">
                 <div class="flip-card-inner">
                 <div class="flip-card-front">
                     <h1 class="user-name">{{ u.nombre }}</h1> 
@@ -132,7 +132,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="categorias" *ngFor="let c of categoryList">
+            <tr class="categorias" *ngFor="let c of filteredCategoryList">
                 <td class="cat-name">{{c.nombre}}</td>
                 <td class="cat-count" style="padding-left: 5em;">3</td>
                 <td>
@@ -148,7 +148,7 @@
     <!-- Vídeos -->
     <section class="home vid" id="videos">
         <div class="text">Vídeos</div>
-        <div class = "videos" *ngFor="let v of videoList">
+        <div class = "videos" *ngFor="let v of filteredVideoList">
             <div class="media">
                 <iframe width="220" height="120" [src]="v.url | safe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
