@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginInterface } from '../interfaces/login-interface';
 import { GetVideoInterface } from '../interfaces/get-video-interface';
+import { Config } from '../modules/config-module'
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,8 @@ import { GetVideoInterface } from '../interfaces/get-video-interface';
 
 export class CredentialControlService {
 
-  url = 'http://192.168.195.3:3200';
-  urlLogin = this.url + '/api/authentications';
+  url = Config.address + ':' + Config.port;
+  urlLogin = this.url + '/api/auth/login';
   urlGetVideosAdmin = this.url + '/api/videos?limite=1&desde=0';
   urlGetVideosUser = this.url + '/api/videos/padre?limite=1&desde=0';
   urlFull = this.urlGetVideosAdmin;
@@ -29,7 +30,7 @@ export class CredentialControlService {
   sendCredential(email: string, password: string) {
 
     const body_content = {
-      "nombre": email,
+      "correo": email,
       "password": password
     }
 

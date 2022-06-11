@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetVideoInterface } from '../interfaces/get-video-interface';
 import { CredentialControlService } from './credential-control.service';
+import { Config } from '../modules/config-module'
 
 @Injectable({
   providedIn: 'root'
 })
 export class VideoCrudServiceService {
 
-  url = 'https://labinfsoft.herokuapp.com';
+  url = Config.address + ':' + Config.port;
 
   urlGetVideosAdmin = this.url + '/api/videos';
   urlGetVideosUser = this.url + '/api/videos/padre';

@@ -3,15 +3,16 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from '../interfaces/category';
 import { CredentialControlService } from './credential-control.service';
+import { Config } from '../modules/config-module'
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryCrudServiceService {
-  url = 'https://labinfsoft.herokuapp.com';
+  url = Config.address + ':' + Config.port;
 
-  urlGetCategoriesAdmin = this.url + '/api/Categories';
-  urlGetCategoriesUser = this.url + '/api/Categories/padre';
+  urlGetCategoriesAdmin = this.url + '/api/categorias';
+  urlGetCategoriesUser = this.url + '/api/categorias/padre';
   urlGetCategories = this.urlGetCategoriesAdmin;
 
   urlCreateCategory = this.url + '/api/categorias';

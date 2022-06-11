@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Users } from '../interfaces/users';
 import { CredentialControlService } from './credential-control.service';
+import { Config } from '../modules/config-module'
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserCrudService {
   
-  url = 'https://labinfsoft.herokuapp.com';
+  url = Config.address + ':' + Config.port;
   urlGetUsers = this.url + "/api/usuarios";
 
   constructor(private http: HttpClient) { }
