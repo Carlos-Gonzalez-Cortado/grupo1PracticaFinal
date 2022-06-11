@@ -6,7 +6,6 @@ import { UserCrudService } from '../common-services/user-crud.service';
 import { VideoCrudServiceService } from '../common-services/video-crud-service.service';
 import { Category } from '../interfaces/category';
 import { User } from '../interfaces/user-interface';
-import { Users } from '../interfaces/users';
 import { VideosInterface } from '../interfaces/videos-interface';
 
 @Component({
@@ -24,7 +23,7 @@ export class AdminComponent implements OnInit {
   filteredCategoryList: Array<Category> = [];
   filteredUserList: Array<User> = [];
   totalVideos: number = 0;
-
+  theme: number = 1;
   constructor(private cred: CredentialControlService,
     private videoCrud: VideoCrudServiceService,
     private catCrud: CategoryCrudServiceService,
@@ -162,12 +161,34 @@ export class AdminComponent implements OnInit {
     nameElement.value = selectedCategory.nombre;
   }
 
+  //Searchbox utilities
   filterData(searchValue: string){
     this.filteredCategoryList = this.categoryList.filter(x => x.nombre.toUpperCase().includes(searchValue.toUpperCase()));
     this.filteredUserList = this.userList.filter(x => x.nombre.toUpperCase().includes(searchValue.toUpperCase()));
     this.filteredVideoList = this.videoList.filter(x => x.nombre.toUpperCase().includes(searchValue.toUpperCase()));
   }
 
+  //theming
+  themeChange(){
+    switch(this.theme){
+      case 1:
+        document.getElementById('tema')?.setAttribute('src', 'assets/img/Giroro.jpeg')
+        document.body.classList.toggle("redtema");
+        break;
+      case 2:
+        document.getElementById('tema')?.setAttribute('src', 'assets/img/Kururu.jpeg')
+        document.body.classList.toggle("redtema");
+        document.body.classList.toggle("yellowtema");
+        break;
+      case 3:
+        document.getElementById('tema')?.setAttribute('src', 'assets/img/Avatar.jpeg')
+        document.body.classList.toggle("yellowtema");
+        this.theme = 0;
+        break;
+    }
+    this.theme += 1;
+  }
+  
   /*
     Video Data Manipulation
   */
