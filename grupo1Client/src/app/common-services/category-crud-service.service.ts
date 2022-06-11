@@ -67,7 +67,7 @@ export class CategoryCrudServiceService {
     return this.http.get(this.urlGetCategories, httpOptions) as Observable<Category>;
   }
 
-  createCategory(nombre: string, url: string, categoria: string) {
+  createCategory(nombre: string) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + CredentialControlService.getToken(),
@@ -76,9 +76,7 @@ export class CategoryCrudServiceService {
     };
 
     const body = {
-      'nombre': nombre,
-      'url': url,
-      'categoria': categoria
+      'nombre': nombre
     }
 
     return this.http.post(this.urlCreateCategory, body, httpOptions);
@@ -95,7 +93,7 @@ export class CategoryCrudServiceService {
     return this.http.delete(this.urlDeleteCategory + id, httpOptions);
   }
 
-  editCategory(id: string, nombre: string, url: string, categoria: string) {
+  editCategory(id: string, nombre: string) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + CredentialControlService.getToken(),
@@ -104,9 +102,7 @@ export class CategoryCrudServiceService {
     };
 
     const body = {
-      'nombre': nombre,
-      'url': url,
-      'categoria': categoria
+      'nombre': nombre
     }
 
     return this.http.put(this.urlEditCategory + id, body, httpOptions);

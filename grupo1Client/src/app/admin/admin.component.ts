@@ -181,4 +181,50 @@ export class AdminComponent implements OnInit {
       }
     )
   }
+
+  /*
+    Category Data Manipulation
+  */
+
+  sendEditCategory(id: string, nombre: string){
+    this.catCrud.editCategory(id, nombre).subscribe(
+      res => {
+        alert('Se ha modificado la información satisfactoriamente.');
+        this.getCategoryList();
+        console.log(res);
+      },
+      err => {
+        alert('Connection failed. Check console log for details.');
+        console.log(err);
+      }
+    )
+  }
+
+  sendDeleteCategory(id: string){
+    this.catCrud.deleteCategory(id).subscribe(
+      res => {
+        alert('Se ha eliminado satisfactoriamente.');
+        this.getCategoryList();
+        console.log(res);
+      },
+      err => {
+        alert('Connection failed. Check console log for details.');
+        console.log(err);
+      }
+    )
+  }
+
+  sendCreateCategory(nombre: string){
+    this.catCrud.createCategory(nombre).subscribe(
+      res => {
+        alert('Se ha modificado la información satisfactoriamente.');
+        this.getCategoryList();
+        console.log(res);
+      },
+      err => {
+        alert('Connection failed. Check console log for details.');
+        console.log(err);
+      }
+    )
+  }
 }

@@ -137,7 +137,7 @@
                 <td class="cat-count" style="padding-left: 5em;">3</td>
                 <td>
                     <button class= "B-C cat-edit"><span>Editar</span></button>
-                    <button class= "B-C cat-delete"  style="background-color: tomato;"><span>Eliminar</span></button> 
+                    <button class= "B-C cat-delete"  style="background-color: tomato;" (click)="sendDeleteCategory(c._id)"><span>Eliminar</span></button> 
                 </td>
             </tr>
             </tbody>
@@ -210,7 +210,7 @@
 
                 <div id="div-form-nombre-categoria">
                     <p class ="input-label" for="form-nombre-category">Nombre:</p>
-                    <input class="form-input" type="text" id="form-nombre-categoria" name="form-nombre"><br>
+                    <input class="form-input" type="text" id="form-nombre-categoria" name="form-nombre" #crear_categoria_nombre><br>
                 </div>
 
                 <p class="input-label" for="form-categoria" style="margin-top: 1em;">Categorías actuales:</p>
@@ -221,7 +221,7 @@
                     <span class="focus"></span>
                 </div>
 
-                <input class="form-button" type="submit" value="Crear">
+                <input class="form-button" type="submit" value="Crear" (click)="sendCreateCategory(crear_categoria_nombre.value)">
 
             </div>
         
@@ -284,14 +284,14 @@
             <div class="mod-tab">
                 <form class="form-inputs">
                     <div class = "select" id="mod-div-id-categoria" style="margin-bottom: 1em; margin-left: 0.75;">
-                        <select id="mod-id-categoria">
+                        <select id="mod-id-categoria" #edit_categoria_id>
                             <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
                         </select>
                         <span class="focus"></span>
                     </div>
                     <hr class="solid">
-                    <input id="mod-input-nombre-categoria" class="form-input-mod" type="text" placeholder="Nombre">
-                    <button id="mod-boton-categoria" class="form-button-mod" type="button">Modificar</button>
+                    <input id="mod-input-nombre-categoria" class="form-input-mod" type="text" placeholder="Nombre" #edit_categoria_nombre>
+                    <button id="mod-boton-categoria" class="form-button-mod" type="button" (click)="sendEditCategory(edit_categoria_id.value, edit_categoria_nombre.value)">Modificar</button>
                 </form>
             </div>
 
