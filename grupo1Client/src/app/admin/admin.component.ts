@@ -105,10 +105,12 @@ export class AdminComponent implements OnInit {
     Active function for click events
   */
 
+  //Delete storage and return to login
   logOut() {
     this.cred.logOut();
   }
 
+  //Set active section in admin panel
   setActiveSection(tab: number) {
 
     let sections = document.querySelectorAll('section');
@@ -135,8 +137,27 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  //Set active parameters in edit
+  setEditUser(id: string, nameElement: HTMLInputElement, emailElement: HTMLInputElement){
+    let selectedUser = this.userList.filter(x => x.uid.includes(id))[0];
+    nameElement.value = selectedUser.nombre;
+    emailElement.value = selectedUser.correo
+  }
+
+  setEditVideo(id: string, nameElement: HTMLInputElement, urlElement: HTMLInputElement, categoryElement: HTMLSelectElement){
+    let selectedVideo = this.videoList.filter(x => x._id.includes(id))[0];
+    nameElement.value = selectedVideo.nombre;
+    urlElement.value = selectedVideo.url;
+    categoryElement.value = selectedVideo.categoria._id;
+  }
+
+  setEditCategory(id: string, nameElement: HTMLInputElement){
+    let selectedCategory = this.categoryList.filter(x => x._id.includes(id))[0];
+    nameElement.value = selectedCategory.nombre;
+  }
+
   /*
-    Video data manipulation
+    Video Data Manipulation
   */
   sendCreateVideo(nombre: string, url: string, categoria: string) {
 

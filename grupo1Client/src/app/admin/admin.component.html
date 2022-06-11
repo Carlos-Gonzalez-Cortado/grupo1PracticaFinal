@@ -107,11 +107,11 @@
                 <div class="flip-card-front">
                     <h1 class="user-name">{{ u.nombre }}</h1> 
                     <p class="user-pass">{{ u.correo }}</p>
-                    <p class="user-type"> {{u.rol}}</p>
+                    <p class="user-type"> {{ u.rol }}</p>
                 </div>
                 <div class="flip-card-back">
                     <p class="user-name" style="margin-bottom: 1em; margin-top: 0.5em;">{{ u.nombre }}</p>
-                    <button class="B-E user-edit"><span>Editar</span></button>
+                    <button class="B-E user-edit" (click)="edit_usuario_id.value = u.uid; setEditUser(edit_usuario_id.value, edit_usuario_nombre, edit_usuario_correo);  setActiveSection(4); edit_usuario_tab.checked = true"><span>Editar</span></button>
                     <button class="B-E user-delete" style="background-color: tomato;" (click)="sendDeleteUser(u.uid)"><span>Eliminar</span></button>
                 </div>
                 </div>
@@ -136,7 +136,7 @@
                 <td class="cat-name">{{c.nombre}}</td>
                 <td class="cat-count" style="padding-left: 5em;">3</td>
                 <td>
-                    <button class= "B-C cat-edit"><span>Editar</span></button>
+                    <button class= "B-C cat-edit" (click)="edit_categoria_id.value = c._id; setEditCategory(edit_categoria_id.value, edit_categoria_nombre); setActiveSection(4); edit_categoria_tab.checked = true"><span>Editar</span></button>
                     <button class= "B-C cat-delete"  style="background-color: tomato;" (click)="sendDeleteCategory(c._id)"><span>Eliminar</span></button> 
                 </td>
             </tr>
@@ -160,7 +160,7 @@
                     {{ v.usuario.nombre }} 
                 </div>
                 <div class="opciones">
-                    <button class= "B-V video-edit"><span>Editar</span></button>
+                    <button class= "B-V video-edit" (click)="edit_video_id.value = v._id; setEditVideo(edit_video_id.value, edit_video_nombre, edit_video_url, video_edit_category); setActiveSection(4); edit_video_tab.checked = true"><span>Editar</span></button>
                     <button class= "B-V video-delete"  style="background-color: tomato;" (click)="sendDeleteVideo(v._id)"><span>Eliminar</span></button> 
                 </div>
             </div>
@@ -256,12 +256,12 @@
         <div class="text">Modificar</div>
         <div class="mod-tabs">
 
-            <input type="radio" name="mod-tabs" id="video-tab" checked="checked">
+            <input type="radio" name="mod-tabs" id="video-tab" checked="checked" #edit_video_tab>
             <label class="label-videos" for="video-tab">Vídeos</label>
             <div class="mod-tab">
                 <form class="form-inputs">
                     <div class = "select" id="mod-div-id-video" style="margin-bottom: 1em; margin-left: 0.75;">
-                        <select id="mod-id-video" #edit_video_id>
+                        <select id="mod-id-video" (click)="setEditVideo(edit_video_id.value, edit_video_nombre, edit_video_url, video_edit_category)" #edit_video_id>
                             <option [value]="v._id" *ngFor="let v of videoList">{{ v.nombre }}</option>
                         </select>
                         <span class="focus"></span>
@@ -279,12 +279,12 @@
                 </form>
             </div>
 
-            <input type="radio" name="mod-tabs" id="categoria-tab">
+            <input type="radio" name="mod-tabs" id="categoria-tab" #edit_categoria_tab>
             <label for="categoria-tab">Categorías</label>
             <div class="mod-tab">
                 <form class="form-inputs">
                     <div class = "select" id="mod-div-id-categoria" style="margin-bottom: 1em; margin-left: 0.75;">
-                        <select id="mod-id-categoria" #edit_categoria_id>
+                        <select id="mod-id-categoria" (change)="setEditCategory(edit_categoria_id.value, edit_categoria_nombre)" #edit_categoria_id>
                             <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
                         </select>
                         <span class="focus"></span>
@@ -295,12 +295,12 @@
                 </form>
             </div>
 
-            <input type="radio" name="mod-tabs" id="usuario-tab">
+            <input type="radio" name="mod-tabs" id="usuario-tab" #edit_usuario_tab>
             <label for="usuario-tab">Usuarios</label>
             <div class="mod-tab">
                 <form class="form-inputs">
                     <div class = "select" id="mod-div-id-usuario" style="margin-bottom: 1em; margin-left: 0.75;">
-                        <select id="mod-id-usuario" #edit_usuario_id>
+                        <select id="mod-id-usuario" (change)="setEditUser(edit_usuario_id.value, edit_usuario_nombre, edit_usuario_correo)" #edit_usuario_id>
                             <option [value]="u.uid" *ngFor="let u of userList" >{{ u.nombre }}</option>
                         </select>
                         <span class="focus"></span>
