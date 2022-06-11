@@ -22,8 +22,10 @@ type User struct {
 }
 
 type TokenDetails struct {
-	TOKEN   string `json:"token"`
-	USUARIO User   `json:"usuario"`
+	TOKEN        string `json:"token"`
+	GENERATED_AT string `json:"generated_at"`
+	EXPIRES_AT   string `json:"expires_at"`
+	USUARIO      User   `json:"usuario"`
 }
 
 func GetAllUsers() ([]User, error) {
@@ -113,16 +115,24 @@ func CreateUser(user User) error {
 }
 */
 
-func UpdateUser(user User) error {
+func UpdateUser(user User) (User, error) {
+	var updatedUser User
+
 	query := `update users set nombre = "` + user.NOMBRE + `",` + `correo = "` + user.CORREO + `",` + `password = "` + user.PASSWORD + `" where id =` + strconv.FormatUint(user.UID, 10) + `;`
 
 	_, err := db.Exec(query)
 
 	if err != nil {
-		return err
+		return updatedUser, err
 	}
 
-	return nil
+	updatedUser = User{
+		NOMBRE:   user.NOMBRE,
+		CORREO:   user.CORREO,
+		PASSWORD: user.PASSWORD,
+	}
+
+	return updatedUser, nil
 }
 
 func DeleteUser(id uint64) error {
@@ -242,47 +252,52 @@ func GenerateToken(nombre string, password string) (TokenDetails, error) {
 	}
 
 	tokenDetails = TokenDetails{
-		TOKEN:   authToken,
-		USUARIO: userDetails,
+		TOKEN:        authToken,
+		GENERATED_AT: generatedAt,
+		EXPIRES_AT:   expiresAt,
+		USUARIO:      userDetails,
 	}
 
 	return tokenDetails, nil
 }
 
-func ValidateToken(authToken string) (map[string]interface{}, error) {
+func ValidateToken(authToken string) (TokenDetails, error) {
+	var UserToken TokenDetails
 
 	queryString := `select 
-						id,
-						nombre,
-						generated_at,
-						expires_at                         
+						users.id,
+						users.nombre,
+						users.rol,
+						authentication_tokens.generated_at,
+						authentication_tokens.expires_at                         
 					from authentication_tokens
 					left join users
-						on user_id = id
-					where auth_token = ?`
+						on authentication_tokens.user_id = users.id
+					where authentication_tokens.auth_token = ?`
 
 	stmt, err := db.Prepare(queryString)
 
 	if err != nil {
-		return nil, err
+		return UserToken, err
 	}
 
 	defer stmt.Close()
 
 	userId := 0
 	username := ""
+	userrol := ""
 	generatedAt := ""
 	expiresAt := ""
 
-	err = stmt.QueryRow(authToken).Scan(&userId, &username, &generatedAt, &expiresAt)
+	err = stmt.QueryRow(authToken).Scan(&userId, &username, &userrol, &generatedAt, &expiresAt)
 
 	if err != nil {
 
 		if err == sql.ErrNoRows {
-			return nil, errors.New("Invalid access token.\r\n")
+			return UserToken, errors.New("Invalid access token.\r\n")
 		}
 
-		return nil, err
+		return UserToken, err
 	}
 
 	const timeLayout = "2006-01-02 15:04:05"
@@ -291,16 +306,21 @@ func ValidateToken(authToken string) (map[string]interface{}, error) {
 	currentTime, _ := time.Parse(timeLayout, time.Now().Format(timeLayout))
 
 	if expiryTime.Before(currentTime) {
-		return nil, errors.New("The token is expired.\r\n")
+		return UserToken, errors.New("The token is expired.\r\n")
 	}
 
-	userDetails := map[string]interface{}{
-		"id":           userId,
-		"nombre":       username,
-		"generated_at": generatedAt,
-		"expires_at":   expiresAt,
+	userDetails := User{
+		UID:    uint64(userId),
+		NOMBRE: username,
+		ROL:    userrol,
 	}
 
-	return userDetails, nil
+	UserToken = TokenDetails{
+		TOKEN:        authToken,
+		GENERATED_AT: generatedAt,
+		EXPIRES_AT:   expiresAt,
+		USUARIO:      userDetails,
+	}
 
+	return UserToken, nil
 }

@@ -16,12 +16,12 @@ func initHandlers() {
 	router.HandleFunc("/api/usuario/{uid}", controller.GetUser).Methods("GET")
 
 	//	router.HandleFunc("/api/usuarios", controller.CreateUser).Methods("POST")
-	router.HandleFunc("/api/usuarios", controller.UpdateUser).Methods("PUT")
+	router.HandleFunc("/api/modificar", controller.UpdateUser).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/api/usuarios/{id}", controller.DeleteUser).Methods("DELETE")
 
-	router.HandleFunc("/api/registrations", controller.RegistrationsHandler).Methods("POST")
-	router.HandleFunc("/api/authentications", controller.AuthenticationsHandler).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/test", controller.TestResourceHandler)
+	router.HandleFunc("/api/registrar", controller.RegistrationsHandler).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/autentificar", controller.AuthenticationsHandler).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/validar", controller.ValidateTokenHandler).Methods("POST", "OPTIONS")
 }
 
 func Start() {

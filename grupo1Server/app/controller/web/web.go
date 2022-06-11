@@ -18,37 +18,56 @@ func eneableCors(w *http.ResponseWriter) {
 }
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	users, err := model.GetAllUsers()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
 	} else {
-		json.NewEncoder(w).Encode(users)
-	}
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
 
+			users, err := model.GetAllUsers()
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+			} else {
+				json.NewEncoder(w).Encode(users)
+			}
+
+		}
+	}
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
+	} else {
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
 
-	param := mux.Vars(r)["uid"]
-	uid, err := strconv.ParseUint(param, 10, 64)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
+			param := mux.Vars(r)["uid"]
+			uid, err := strconv.ParseUint(param, 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			user, err := model.GetUser(uid)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+			json.NewEncoder(w).Encode(user)
+		}
 	}
-
-	user, err := model.GetUser(uid)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	json.NewEncoder(w).Encode(user)
 }
 
 /*
@@ -77,73 +96,109 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 */
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	decoder := json.NewDecoder(r.Body)
-	var user model.User
-	err := decoder.Decode(&user)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	err = model.UpdateUser(user)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
 	} else {
-		w.WriteHeader(http.StatusOK)
-	}
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
 
+			decoder := json.NewDecoder(r.Body)
+			var user model.User
+			err := decoder.Decode(&user)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			updatedUser, err := model.UpdateUser(user)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			} else {
+				w.WriteHeader(http.StatusOK)
+
+				fmt.Print("Se supone que se ha actualizado")
+
+				enc := json.NewEncoder(w)
+				enc.SetIndent("", "  ")
+				enc.Encode(updatedUser)
+
+			}
+		}
+
+	}
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	param := mux.Vars(r)
-	idStr := param["id"]
-	id, err := strconv.ParseUint(idStr, 10, 64)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	err = model.DeleteUser(id)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
 	} else {
-		w.WriteHeader(http.StatusOK)
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
+
+			param := mux.Vars(r)
+			idStr := param["id"]
+			id, err := strconv.ParseUint(idStr, 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			err = model.DeleteUser(id)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			} else {
+				w.WriteHeader(http.StatusOK)
+			}
+		}
 	}
 }
 
 func RegistrationsHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	dec := json.NewDecoder(r.Body)
-	var user model.User
-	err := dec.Decode(&user)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	if user.NOMBRE == "" || user.CORREO == "" || user.PASSWORD == "" {
-		fmt.Fprintf(w, "Please enter a valid username and password.\r\n")
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
 	} else {
-		response, err := model.CreateUser(user.NOMBRE, user.CORREO, user.PASSWORD)
-		if err != nil {
-			fmt.Fprintf(w, err.Error())
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
 		} else {
-			fmt.Fprintf(w, response)
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
+
+			dec := json.NewDecoder(r.Body)
+			var user model.User
+			err := dec.Decode(&user)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			if user.NOMBRE == "" || user.CORREO == "" || user.PASSWORD == "" {
+				fmt.Fprintf(w, "Please enter a valid username and password.\r\n")
+			} else {
+				response, err := model.CreateUser(user.NOMBRE, user.CORREO, user.PASSWORD)
+				if err != nil {
+					fmt.Fprintf(w, err.Error())
+				} else {
+					fmt.Fprintf(w, response)
+				}
+			}
 		}
 	}
-
 }
 
 func AuthenticationsHandler(w http.ResponseWriter, r *http.Request) {
@@ -151,45 +206,80 @@ func AuthenticationsHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
 		eneableCors(&w)
 	} else {
-		w.Header().Set("Content-Type", "application/json")
-		eneableCors(&w)
-
-		fmt.Print(w.Header())
-
-		dec := json.NewDecoder(r.Body)
-		var user model.User
-		err := dec.Decode(&user)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
-		if user.NOMBRE == "" || user.PASSWORD == "" {
-			fmt.Fprintf(w, "Please enter a valid username and password.\r\n")
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
 		} else {
-			tokenDetails, err := model.GenerateToken(user.NOMBRE, user.PASSWORD)
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
+
+			fmt.Print(w.Header())
+
+			dec := json.NewDecoder(r.Body)
+			var user model.User
+			err := dec.Decode(&user)
 			if err != nil {
-				fmt.Fprintf(w, err.Error())
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			if user.NOMBRE == "" || user.PASSWORD == "" {
+				fmt.Fprintf(w, "Please enter a valid username and password.\r\n")
 			} else {
-				enc := json.NewEncoder(w)
-				enc.SetIndent("", "  ")
-				enc.Encode(tokenDetails)
+				tokenDetails, err := model.GenerateToken(user.NOMBRE, user.PASSWORD)
+				if err != nil {
+					fmt.Fprintf(w, err.Error())
+				} else {
+					enc := json.NewEncoder(w)
+					enc.SetIndent("", "  ")
+					enc.Encode(tokenDetails)
+				}
 			}
 		}
 	}
 }
 
-func TestResourceHandler(w http.ResponseWriter, req *http.Request) {
-	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
+func ValidateTokenHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
+	} else {
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
 
-	authToken := strings.Split(req.Header.Get("Authorization"), "Bearer ")[1]
+			fmt.Println(w.Header())
+
+			authToken := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
+
+			fmt.Println("* El token es " + authToken)
+
+			userDetails, err := model.ValidateToken(authToken)
+			if err != nil {
+				fmt.Fprintf(w, err.Error())
+			} else {
+				enc := json.NewEncoder(w)
+				enc.Encode(userDetails)
+			}
+		}
+	}
+}
+
+func TokenCheck(w http.ResponseWriter, r *http.Request) bool {
+	authToken := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
 
 	userDetails, err := model.ValidateToken(authToken)
+
+	fmt.Println("* Datos del usuario: " + userDetails.USUARIO.ROL)
+
 	if err != nil {
 		fmt.Fprintf(w, err.Error())
+		return false
+	} else if userDetails.USUARIO.ROL != "ADMIN_ROL" {
+		return false
 	} else {
-		nombre := fmt.Sprint(userDetails["nombre"])
-		fmt.Fprintf(w, "Welcome, "+nombre+"\r\n")
+		return true
 	}
 }
