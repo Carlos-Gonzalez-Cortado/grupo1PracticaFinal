@@ -3,15 +3,16 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from '../interfaces/category';
 import { CredentialControlService } from './credential-control.service';
+import { Config } from '../modules/config-module'
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryCrudServiceService {
-  url = 'https://labinfsoft.herokuapp.com';
+  url = Config.address + ':' + Config.port;
 
-  urlGetCategoriesAdmin = this.url + '/api/Categories';
-  urlGetCategoriesUser = this.url + '/api/Categories/padre';
+  urlGetCategoriesAdmin = this.url + '/api/categorias';
+  urlGetCategoriesUser = this.url + '/api/categorias/padre';
   urlGetCategories = this.urlGetCategoriesAdmin;
 
   urlCreateCategory = this.url + '/api/categorias';
@@ -66,7 +67,7 @@ export class CategoryCrudServiceService {
     return this.http.get(this.urlGetCategories, httpOptions) as Observable<Category>;
   }
 
-  createCategory(nombre: string, url: string, categoria: string) {
+  createCategory(nombre: string) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + CredentialControlService.getToken(),
@@ -75,9 +76,7 @@ export class CategoryCrudServiceService {
     };
 
     const body = {
-      'nombre': nombre,
-      'url': url,
-      'categoria': categoria
+      'nombre': nombre
     }
 
     return this.http.post(this.urlCreateCategory, body, httpOptions);
@@ -94,7 +93,7 @@ export class CategoryCrudServiceService {
     return this.http.delete(this.urlDeleteCategory + id, httpOptions);
   }
 
-  editCategory(id: string, nombre: string, url: string, categoria: string) {
+  editCategory(id: string, nombre: string) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + CredentialControlService.getToken(),
@@ -103,9 +102,7 @@ export class CategoryCrudServiceService {
     };
 
     const body = {
-      'nombre': nombre,
-      'url': url,
-      'categoria': categoria
+      'nombre': nombre
     }
 
     return this.http.put(this.urlEditCategory + id, body, httpOptions);

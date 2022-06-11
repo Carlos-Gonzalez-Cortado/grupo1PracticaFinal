@@ -24,6 +24,7 @@ export class StartComponent implements OnInit {
   filteredVideosByCategory:Array<VideosInterface> = [];
   filteredVideosBySearch:Array<VideosInterface> = [];
   isAdmin:boolean = false;
+  theme:number = 1;
 
   constructor(
     private cred: CredentialControlService, 
@@ -113,6 +114,27 @@ export class StartComponent implements OnInit {
     );
 
     this.filteredVideoList = this.inBoth(this.filteredVideosByCategory, this.filteredVideosBySearch);
+  }
+
+  //theming
+  themeChange(){    
+    switch(this.theme){
+      case 1:
+        document.getElementById('tema')?.setAttribute('src', 'assets/img/Giroro.jpeg')
+        document.body.classList.toggle("redtema");
+        break;
+      case 2:
+        document.getElementById('tema')?.setAttribute('src', 'assets/img/Kururu.jpeg')
+        document.body.classList.toggle("redtema");
+        document.body.classList.toggle("yellowtema");
+        break;
+      case 3:
+        document.getElementById('tema')?.setAttribute('src', 'assets/img/Avatar.jpeg')
+        document.body.classList.toggle("yellowtema");
+        this.theme = 0;
+        break;
+    }
+    this.theme += 1;
   }
  
   operation = (list1:Array<VideosInterface>, list2:Array<VideosInterface>, isUnion = false) =>

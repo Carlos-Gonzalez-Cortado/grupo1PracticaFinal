@@ -9,6 +9,8 @@ import { CredentialControlService } from '../common-services/credential-control.
 })
 export class LoginComponent implements OnInit {
 
+  theme:number = 1;
+
   constructor(private cred:CredentialControlService) {  }
 
   onSubmit(uname: string, pwd: string) {
@@ -37,5 +39,26 @@ export class LoginComponent implements OnInit {
         localStorage.clear();
       }
     )
+  }
+
+  //theming
+  themeChange(){
+    switch(this.theme){
+      case 1:
+        document.getElementById('tema')?.setAttribute('src', 'assets/img/Giroro.jpeg')
+        document.body.classList.toggle("redtema");
+        break;
+      case 2:
+        document.getElementById('tema')?.setAttribute('src', 'assets/img/Kururu.jpeg')
+        document.body.classList.toggle("redtema");
+        document.body.classList.toggle("yellowtema");
+        break;
+      case 3:
+        document.getElementById('tema')?.setAttribute('src', 'assets/img/Avatar.jpeg')
+        document.body.classList.toggle("yellowtema");
+        this.theme = 0;
+        break;
+    }
+    this.theme += 1;
   }
 }
