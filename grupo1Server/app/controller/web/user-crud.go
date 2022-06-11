@@ -11,12 +11,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func eneableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-}
-
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
@@ -35,7 +29,6 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 			} else {
 				json.NewEncoder(w).Encode(users)
 			}
-
 		}
 	}
 }
@@ -131,7 +124,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 			}
 		}
-
 	}
 }
 
@@ -206,34 +198,30 @@ func AuthenticationsHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
 		eneableCors(&w)
 	} else {
-		if !TokenCheck(w, r) {
-			fmt.Print("Invalid Token")
+		w.Header().Set("Content-Type", "application/json")
+		eneableCors(&w)
+
+		fmt.Print(w.Header())
+
+		dec := json.NewDecoder(r.Body)
+		var user model.User
+		err := dec.Decode(&user)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if user.NOMBRE == "" || user.PASSWORD == "" {
+			fmt.Fprintf(w, "Please enter a valid username and password.\r\n")
 		} else {
-			w.Header().Set("Content-Type", "application/json")
-			eneableCors(&w)
-
-			fmt.Print(w.Header())
-
-			dec := json.NewDecoder(r.Body)
-			var user model.User
-			err := dec.Decode(&user)
+			tokenDetails, err := model.GenerateToken(user.NOMBRE, user.PASSWORD)
 			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
-				return
-			}
-
-			if user.NOMBRE == "" || user.PASSWORD == "" {
-				fmt.Fprintf(w, "Please enter a valid username and password.\r\n")
+				fmt.Fprintf(w, err.Error())
 			} else {
-				tokenDetails, err := model.GenerateToken(user.NOMBRE, user.PASSWORD)
-				if err != nil {
-					fmt.Fprintf(w, err.Error())
-				} else {
-					enc := json.NewEncoder(w)
-					enc.SetIndent("", "  ")
-					enc.Encode(tokenDetails)
-				}
+				enc := json.NewEncoder(w)
+				enc.SetIndent("", "  ")
+				enc.Encode(tokenDetails)
 			}
 		}
 	}
@@ -264,22 +252,5 @@ func ValidateTokenHandler(w http.ResponseWriter, r *http.Request) {
 				enc.Encode(userDetails)
 			}
 		}
-	}
-}
-
-func TokenCheck(w http.ResponseWriter, r *http.Request) bool {
-	authToken := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
-
-	userDetails, err := model.ValidateToken(authToken)
-
-	fmt.Println("* Datos del usuario: " + userDetails.USUARIO.ROL)
-
-	if err != nil {
-		fmt.Fprintf(w, err.Error())
-		return false
-	} else if userDetails.USUARIO.ROL != "ADMIN_ROL" {
-		return false
-	} else {
-		return true
 	}
 }

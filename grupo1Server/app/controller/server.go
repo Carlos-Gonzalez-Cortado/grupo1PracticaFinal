@@ -11,7 +11,7 @@ import (
 
 var router *mux.Router
 
-func initHandlers() {
+func initUserHandlers() {
 	router.HandleFunc("/api/usuarios", controller.GetAllUsers).Methods("GET")
 	router.HandleFunc("/api/usuario/{uid}", controller.GetUser).Methods("GET")
 
@@ -27,7 +27,7 @@ func initHandlers() {
 func Start() {
 	router = mux.NewRouter()
 
-	initHandlers()
+	initUserHandlers()
 	fmt.Printf("router initialized and listening on 3200\n")
 	log.Fatal(http.ListenAndServe(":3200", router))
 }
