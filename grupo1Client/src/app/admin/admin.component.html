@@ -134,10 +134,10 @@
             <tbody>
             <tr class="categorias" *ngFor="let c of filteredCategoryList">
                 <td class="cat-name">{{c.nombre}}</td>
-                <td class="cat-count" style="padding-left: 5em;">3</td>
+                <td class="cat-count" style="padding-left: 5em;" #category_count> {{ categoryCount(c._id) }} </td>
                 <td>
                     <button class= "B-C cat-edit" (click)="edit_categoria_id.value = c._id; setEditCategory(edit_categoria_id.value, edit_categoria_nombre); setActiveSection(4); edit_categoria_tab.checked = true"><span>Editar</span></button>
-                    <button class= "B-C cat-delete"  style="background-color: tomato;" (click)="sendDeleteCategory(c._id)"><span>Eliminar</span></button> 
+                    <button class= "B-C cat-delete"  style="background-color: tomato;" (click)="sendDeleteCategory(c._id, category_count.innerHTML)"><span>Eliminar</span></button> 
                 </td>
             </tr>
             </tbody>

@@ -143,34 +143,34 @@ export class AdminComponent implements OnInit {
   }
 
   //Set active parameters in edit
-  setEditUser(id: string, nameElement: HTMLInputElement, emailElement: HTMLInputElement){
+  setEditUser(id: string, nameElement: HTMLInputElement, emailElement: HTMLInputElement) {
     let selectedUser = this.userList.filter(x => x.uid.includes(id))[0];
     nameElement.value = selectedUser.nombre;
     emailElement.value = selectedUser.correo
   }
 
-  setEditVideo(id: string, nameElement: HTMLInputElement, urlElement: HTMLInputElement, categoryElement: HTMLSelectElement){
+  setEditVideo(id: string, nameElement: HTMLInputElement, urlElement: HTMLInputElement, categoryElement: HTMLSelectElement) {
     let selectedVideo = this.videoList.filter(x => x._id.includes(id))[0];
     nameElement.value = selectedVideo.nombre;
     urlElement.value = selectedVideo.url;
     categoryElement.value = selectedVideo.categoria._id;
   }
 
-  setEditCategory(id: string, nameElement: HTMLInputElement){
+  setEditCategory(id: string, nameElement: HTMLInputElement) {
     let selectedCategory = this.categoryList.filter(x => x._id.includes(id))[0];
     nameElement.value = selectedCategory.nombre;
   }
 
   //Searchbox utilities
-  filterData(searchValue: string){
+  filterData(searchValue: string) {
     this.filteredCategoryList = this.categoryList.filter(x => x.nombre.toUpperCase().includes(searchValue.toUpperCase()));
     this.filteredUserList = this.userList.filter(x => x.nombre.toUpperCase().includes(searchValue.toUpperCase()));
     this.filteredVideoList = this.videoList.filter(x => x.nombre.toUpperCase().includes(searchValue.toUpperCase()));
   }
 
   //theming
-  themeChange(){
-    switch(this.theme){
+  themeChange() {
+    switch (this.theme) {
       case 1:
         document.getElementById('tema')?.setAttribute('src', 'assets/img/Giroro.jpeg')
         document.body.classList.toggle("redtema");
@@ -188,7 +188,12 @@ export class AdminComponent implements OnInit {
     }
     this.theme += 1;
   }
-  
+
+  //Get video per category
+  categoryCount(id: string) {
+    return this.videoList.filter(x => x.categoria._id.includes(id)).length;
+  }
+
   /*
     Video Data Manipulation
   */
@@ -240,7 +245,7 @@ export class AdminComponent implements OnInit {
     Category Data Manipulation
   */
 
-  sendEditCategory(id: string, nombre: string){
+  sendEditCategory(id: string, nombre: string) {
     this.catCrud.editCategory(id, nombre).subscribe(
       res => {
         alert('Se ha modificado la información satisfactoriamente.');
@@ -254,22 +259,25 @@ export class AdminComponent implements OnInit {
     )
   }
 
-  sendDeleteCategory(id: string){
-    if (confirm('¿Estás seguro de que deseas eliminar la categoría?'))
-      this.catCrud.deleteCategory(id).subscribe(
-        res => {
-          alert('Se ha eliminado satisfactoriamente.');
-          this.getCategoryList();
-          console.log(res);
-        },
-        err => {
-          alert('Connection failed. Check console log for details.');
-          console.log(err);
-        }
-      )
+  sendDeleteCategory(id: string, value: string) {
+    if (value.includes('0')) {
+      if (confirm('¿Estás seguro de que deseas eliminar la categoría?'))
+        this.catCrud.deleteCategory(id).subscribe(
+          res => {
+            alert('Se ha eliminado satisfactoriamente.');
+            this.getCategoryList();
+            console.log(res);
+          },
+          err => {
+            alert('Connection failed. Check console log for details.');
+            console.log(err);
+          }
+        )
+    } else alert('No se puede eliminar una categoría con videos');
+
   }
 
-  sendCreateCategory(nombre: string){
+  sendCreateCategory(nombre: string) {
     this.catCrud.createCategory(nombre).subscribe(
       res => {
         alert('Se ha modificado la información satisfactoriamente.');
@@ -287,10 +295,25 @@ export class AdminComponent implements OnInit {
     User Data Manipulation
   */
 
-    sendEditUser(id: string, nombre: string, correo: string, password: string){
-      this.userCrud.editUser(id, nombre, correo, password).subscribe(
+  sendEditUser(id: string, nombre: string, correo: string, password: string) {
+    this.userCrud.editUser(id, nombre, correo, password).subscribe(
+      res => {
+        alert('Se ha modificado la información satisfactoriamente.');
+        this.getUserList();
+        console.log(res);
+      },
+      err => {
+        alert('Connection failed. Check console log for details.');
+        console.log(err);
+      }
+    )
+  }
+
+  sendDeleteUser(id: string) {
+    if (confirm('¿Estás seguro de que deseas eliminar el usuario?'))
+      this.userCrud.deleteUser(id).subscribe(
         res => {
-          alert('Se ha modificado la información satisfactoriamente.');
+          alert('Se ha eliminado satisfactoriamente.');
           this.getUserList();
           console.log(res);
         },
@@ -299,34 +322,19 @@ export class AdminComponent implements OnInit {
           console.log(err);
         }
       )
-    }
-  
-    sendDeleteUser(id: string){
-      if (confirm('¿Estás seguro de que deseas eliminar el usuario?'))
-        this.userCrud.deleteUser(id).subscribe(
-          res => {
-            alert('Se ha eliminado satisfactoriamente.');
-            this.getUserList();
-            console.log(res);
-          },
-          err => {
-            alert('Connection failed. Check console log for details.');
-            console.log(err);
-          }
-        )
-    }
-  
-    sendCreateUser(nombre: string, correo: string, password: string){
-      this.userCrud.createUser(nombre, correo, password).subscribe(
-        res => {
-          alert('Se ha modificado la información satisfactoriamente.');
-          this.getUserList();
-          console.log(res);
-        },
-        err => {
-          alert('Connection failed. Check console log for details.');
-          console.log(err);
-        }
-      )
-    }
+  }
+
+  sendCreateUser(nombre: string, correo: string, password: string) {
+    this.userCrud.createUser(nombre, correo, password).subscribe(
+      res => {
+        alert('Se ha modificado la información satisfactoriamente.');
+        this.getUserList();
+        console.log(res);
+      },
+      err => {
+        alert('Connection failed. Check console log for details.');
+        console.log(err);
+      }
+    )
+  }
 }
