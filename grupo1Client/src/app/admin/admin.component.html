@@ -112,7 +112,7 @@
                 <div class="flip-card-back">
                     <p class="user-name" style="margin-bottom: 1em; margin-top: 0.5em;">{{ u.nombre }}</p>
                     <button class="B-E user-edit"><span>Editar</span></button>
-                    <button class="B-E user-delete" style="background-color: tomato;"><span>Eliminar</span></button>
+                    <button class="B-E user-delete" style="background-color: tomato;" (click)="sendDeleteUser(u.uid)"><span>Eliminar</span></button>
                 </div>
                 </div>
             </div>
@@ -231,20 +231,20 @@
                 <h1>Datos del usuario</h1>
                 <div id="div-form-nombre-usuario">
                     <p class ="input-label" for="form-nombre-user">Nombre:</p>
-                    <input class="form-input" type="text" id="form-nombre-usuario" name="form-nombre"><br>
+                    <input class="form-input" type="text" id="form-nombre-usuario" name="form-nombre" #crear_usuario_nombre><br>
                 </div>
 
                 <div id="div-form-correo">
                     <p class ="input-label" for="form-correo">Correo:</p>
-                    <input class="form-input" type="text" id="form-correo" name="form-correo"><br>
+                    <input class="form-input" type="text" id="form-correo" name="form-correo" #crear_usuario_correo><br>
                 </div>
 
                 <div id="div-form-contraseña">
                     <p class ="input-label" for="form-contraseña">Contraseña:</p>
-                    <input class="form-input" type="text" id="form-contraseña" name="form-contraseña"><br>
+                    <input class="form-input" type="text" id="form-contraseña" name="form-contraseña" #crear_usuario_password><br>
                 </div>
 
-                <input class="form-button" type="submit" value="Crear">
+                <input class="form-button" type="submit" value="Crear" (click)="sendCreateUser(crear_usuario_nombre.value, crear_usuario_correo.value, crear_usuario_password.value)">
 
             </div>
         </div>
@@ -300,16 +300,16 @@
             <div class="mod-tab">
                 <form class="form-inputs">
                     <div class = "select" id="mod-div-id-usuario" style="margin-bottom: 1em; margin-left: 0.75;">
-                        <select id="mod-id-usuario">
-                            <option [value]="u.uid" *ngFor="let u of userList">{{ u.nombre }}</option>
+                        <select id="mod-id-usuario" #edit_usuario_id>
+                            <option [value]="u.uid" *ngFor="let u of userList" >{{ u.nombre }}</option>
                         </select>
                         <span class="focus"></span>
                     </div>
                     <hr class="solid">
-                    <input id="mod-input-nombre-usuario" class="form-input-mod" type="text" placeholder="Nombre">
-                    <input id="mod-input-correo" class="form-input-mod" type="email" placeholder="Correo">
-                    <input id="mod-input-contraseña" class="form-input-mod" type="text" placeholder="Contraseña">
-                    <button id="mod-boton-usuario" class="form-button-mod" type="button">Modificar</button>
+                    <input id="mod-input-nombre-usuario" class="form-input-mod" type="text" placeholder="Nombre" #edit_usuario_nombre>
+                    <input id="mod-input-correo" class="form-input-mod" type="email" placeholder="Correo" #edit_usuario_correo>
+                    <input id="mod-input-contraseña" class="form-input-mod" type="text" placeholder="Contraseña" #edit_usuario_password>
+                    <button id="mod-boton-usuario" class="form-button-mod" type="button" (click)="sendEditUser(edit_usuario_id.value, edit_usuario_nombre.value, edit_usuario_correo.value, edit_usuario_password.value)">Modificar</button>
                 </form>
             </div>
 

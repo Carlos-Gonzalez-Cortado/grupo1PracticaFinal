@@ -12,6 +12,9 @@ export class UserCrudService {
   
   url = Config.address + ':' + Config.port;
   urlGetUsers = this.url + "/api/usuarios";
+  urlCreateUser = this.url + "/api/usuarios";
+  urlEditUser = this.url + "/api/usuarios/";
+  urlDeleteUser = this.url + "/api/usuarios/";
 
   constructor(private http: HttpClient) { }
 
@@ -29,6 +32,50 @@ export class UserCrudService {
     return this.http.get(this.urlGetUsers, httpOptions) as Observable<Users>;
   }
 
-  
+  createUser(nombre: string, correo: string, password: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + CredentialControlService.getToken(),
+        "Content-Type": "application/json"
+      })
+    };
+
+    const body = {
+      'nombre': nombre,
+      'correo': correo,
+      'password': password
+    }
+
+    return this.http.post(this.urlCreateUser, body, httpOptions);
+  }
+
+  deleteUser(id: string) {
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + CredentialControlService.getToken(),
+      })
+    };
+
+    return this.http.delete(this.urlDeleteUser + id, httpOptions);
+  }
+
+  editUser(id: string, nombre: string, correo: string, password: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + CredentialControlService.getToken(),
+        "Content-Type": "application/json"
+      })
+    };
+
+    const body = {
+      'nombre': nombre,
+      'correo': correo,
+      'password': password,
+      'uid': id
+    }
+
+    return this.http.put(this.urlEditUser + id, body, httpOptions);
+  }
 
 }

@@ -201,17 +201,18 @@ export class AdminComponent implements OnInit {
   }
 
   sendDeleteCategory(id: string){
-    this.catCrud.deleteCategory(id).subscribe(
-      res => {
-        alert('Se ha eliminado satisfactoriamente.');
-        this.getCategoryList();
-        console.log(res);
-      },
-      err => {
-        alert('Connection failed. Check console log for details.');
-        console.log(err);
-      }
-    )
+    if (confirm('¿Estás seguro de que deseas eliminar la categoría?'))
+      this.catCrud.deleteCategory(id).subscribe(
+        res => {
+          alert('Se ha eliminado satisfactoriamente.');
+          this.getCategoryList();
+          console.log(res);
+        },
+        err => {
+          alert('Connection failed. Check console log for details.');
+          console.log(err);
+        }
+      )
   }
 
   sendCreateCategory(nombre: string){
@@ -227,4 +228,51 @@ export class AdminComponent implements OnInit {
       }
     )
   }
+
+  /*
+    User Data Manipulation
+  */
+
+    sendEditUser(id: string, nombre: string, correo: string, password: string){
+      this.userCrud.editUser(id, nombre, correo, password).subscribe(
+        res => {
+          alert('Se ha modificado la información satisfactoriamente.');
+          this.getUserList();
+          console.log(res);
+        },
+        err => {
+          alert('Connection failed. Check console log for details.');
+          console.log(err);
+        }
+      )
+    }
+  
+    sendDeleteUser(id: string){
+      if (confirm('¿Estás seguro de que deseas eliminar el usuario?'))
+        this.userCrud.deleteUser(id).subscribe(
+          res => {
+            alert('Se ha eliminado satisfactoriamente.');
+            this.getUserList();
+            console.log(res);
+          },
+          err => {
+            alert('Connection failed. Check console log for details.');
+            console.log(err);
+          }
+        )
+    }
+  
+    sendCreateUser(nombre: string, correo: string, password: string){
+      this.userCrud.createUser(nombre, correo, password).subscribe(
+        res => {
+          alert('Se ha modificado la información satisfactoriamente.');
+          this.getUserList();
+          console.log(res);
+        },
+        err => {
+          alert('Connection failed. Check console log for details.');
+          console.log(err);
+        }
+      )
+    }
 }
