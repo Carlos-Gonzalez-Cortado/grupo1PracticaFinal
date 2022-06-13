@@ -23,7 +23,7 @@ func TokenCheck(w http.ResponseWriter, r *http.Request) bool {
 	if err != nil {
 		fmt.Fprintf(w, err.Error())
 		return false
-	} else if userDetails.USUARIO.ROL != "ADMIN_ROL" {
+	} else if userDetails.USUARIO.ROL != "ADMIN_ROLE" {
 		return false
 	} else {
 		return true

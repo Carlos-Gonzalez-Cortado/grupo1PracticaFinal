@@ -19,16 +19,16 @@ type Productos struct {
 	_ID       uint64 `json:"_id"`
 	NOMBRE    string `json:"nombre"`
 	USUARIO   User   `json:"usuario"`
-	CATEGORIA tipos  `json:"categoria"`
+	CATEGORIA Tipos  `json:"categoria"`
 	URL       string `json:"url"`
 }
 
 type Categorias struct {
-	TOTAL      uint64 `json:"total"`
-	CATEGORIAS tipos  `json:"categorias"`
+	TOTAL      uint64  `json:"total"`
+	CATEGORIAS []Tipos `json:"categorias"`
 }
 
-type tipos struct {
+type Tipos struct {
 	_ID     uint64 `json:"_id"`
 	NOMBRE  string `json:"nombre"`
 	USUARIO User   `json:"usuario"`
