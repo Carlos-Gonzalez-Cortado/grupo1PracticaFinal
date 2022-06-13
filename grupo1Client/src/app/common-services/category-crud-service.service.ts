@@ -40,16 +40,17 @@ export class CategoryCrudServiceService {
         'Authorization': 'Bearer ' + CredentialControlService.getToken()
       })
     };
-    (this.http.get(this.urlGetCategoriesUser + '/limite=1&desde=0', httpOptions) as Observable<Category>).subscribe(
+    (this.http.get(this.urlGetCategoriesUser + '?limite=1&desde=0', httpOptions) as Observable<Category>).subscribe(
       res => {
         this.total = res['total'];
+        this.urlGetCategories = this.urlGetCategoriesUser + '?limite=' + this.total + '&desde=0';
         console.log(res);
       },
       err => {
         console.log(err);
       }
     );
-    this.urlGetCategories = this.urlGetCategoriesUser + '/limite=' + this.total + '&desde=0';
+    
   }
 
   getCategories() {
