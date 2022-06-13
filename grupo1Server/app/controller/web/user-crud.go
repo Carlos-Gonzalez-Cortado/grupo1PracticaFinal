@@ -96,18 +96,15 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		if !TokenCheck(w, r) {
 			fmt.Print("Invalid Token")
 		} else {
-
 			w.Header().Set("Content-Type", "application/json")
 			eneableCors(&w)
 
-			/// ->
-			param := mux.Vars(r)
-			idStr := param["id"]
-			id, errParse := strconv.ParseUint(idStr, 10, 64)
-
-			if errParse != nil {
+			param := mux.Vars(r)["uid"]
+			fmt.Println("* El param antes del parse Uint en el update es " + param)
+			id, err := strconv.ParseUint(param, 10, 64)
+			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(errParse.Error()))
+				w.Write([]byte(err.Error()))
 				return
 			}
 			/// <-
@@ -156,9 +153,8 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			eneableCors(&w)
 
-			param := mux.Vars(r)
-			idStr := param["id"]
-			id, err := strconv.ParseUint(idStr, 10, 64)
+			param := mux.Vars(r)["uid"]
+			id, err := strconv.ParseUint(param, 10, 64)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -204,7 +200,9 @@ func RegistrationsHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					fmt.Fprintf(w, err.Error())
 				} else {
-					fmt.Fprintf(w, response)
+					enc := json.NewEncoder(w)
+					enc.SetIndent("", "  ")
+					enc.Encode(response)
 				}
 			}
 		}

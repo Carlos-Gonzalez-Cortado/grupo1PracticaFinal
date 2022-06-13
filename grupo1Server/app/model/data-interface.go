@@ -1,5 +1,10 @@
 package model
 
+type Users struct {
+	TOTAL   uint64 `json:"total"`
+	USUARIO []User `json:"usuarios"`
+}
+
 type User struct {
 	NOMBRE   string `json:"nombre"`
 	CORREO   string `json:"correo"`

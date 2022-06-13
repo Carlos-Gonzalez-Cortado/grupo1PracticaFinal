@@ -1,13 +1,15 @@
 package model
 
 import (
+	"fmt"
 	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-func GetAllUsers() ([]User, error) {
-	var users []User
+func GetAllUsers() (Users, error) {
+	var usersArray []User
+	var users Users
 
 	query := `select nombre, correo, rol, password, estado, padre, id from users;`
 
@@ -28,6 +30,24 @@ func GetAllUsers() ([]User, error) {
 			return users, err
 		}
 
+		queryCount := `select count(*) from users;`
+
+		stmtCount, errCount := db.Prepare(queryCount)
+
+		if errCount != nil {
+			fmt.Print("There is a problem in the user count")
+		}
+
+		defer stmtCount.Close()
+
+		var userCount uint64 = 0
+
+		errCount = stmtCount.QueryRow().Scan(&userCount)
+
+		if errCount != nil {
+			fmt.Print("There is a problem in the user count")
+		}
+
 		user := User{
 			NOMBRE:   nombre,
 			CORREO:   correo,
@@ -38,7 +58,12 @@ func GetAllUsers() ([]User, error) {
 			UID:      uid,
 		}
 
-		users = append(users, user)
+		usersArray = append(usersArray, user)
+
+		users = Users{
+			USUARIO: usersArray,
+			TOTAL:   userCount,
+		}
 	}
 
 	return users, nil
@@ -47,7 +72,7 @@ func GetAllUsers() ([]User, error) {
 func GetUser(uid uint64) (User, error) {
 	var user User
 
-	query := `select nombre, correo, rol, estado, padre, id from users u where u.id = ` + strconv.FormatUint(uid, 10)
+	query := `select nombre, correo, rol, estado, padre, id from users u where u.id = ` + strconv.FormatUint(uid, 10) + `;`
 
 	row, err := db.Query(query)
 	if err != nil {
@@ -125,14 +150,15 @@ func DeleteUser(id uint64) error {
 	return nil
 }
 
-func CreateUser(nombre string, correo string, password string) (string, error) {
+func CreateUser(nombre string, correo string, password string) (User, error) {
+	var user User
 
 	queryString := "insert into users(nombre, correo, password) values (?, ?, ?)"
 
 	stmt, err := db.Prepare(queryString)
 
 	if err != nil {
-		return "", err
+		return user, err
 	}
 
 	defer stmt.Close()
@@ -142,9 +168,15 @@ func CreateUser(nombre string, correo string, password string) (string, error) {
 	_, err = stmt.Exec(nombre, correo, hashedPassword)
 
 	if err != nil {
-		return "", err
+		return user, err
 	}
 
-	return "Success\r\n", nil
+	user = User{
+		NOMBRE:   nombre,
+		CORREO:   correo,
+		PASSWORD: password,
+	}
+
+	return user, nil
 
 }

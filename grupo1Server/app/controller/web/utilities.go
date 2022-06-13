@@ -14,7 +14,9 @@ func eneableCors(w *http.ResponseWriter) {
 }
 
 func TokenCheck(w http.ResponseWriter, r *http.Request) bool {
+	fmt.Println("* El r.Header.Get(Authorization) es " + r.Header.Get("Authorization"))
 	authToken := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
+	fmt.Print("* El authToken es " + authToken)
 
 	userDetails, err := model.ValidateToken(authToken)
 

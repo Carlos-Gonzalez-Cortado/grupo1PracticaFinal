@@ -16,8 +16,8 @@ func initUserHandlers() {
 	router.HandleFunc("/api/usuario/{uid}", controller.GetUser).Methods("GET", "OPTIONS")
 
 	//	router.HandleFunc("/api/usuarios", controller.CreateUser).Methods("POST")
-	router.HandleFunc("/api/usuarios/{id}", controller.UpdateUser).Methods("PUT", "OPTIONS") //añadir lo del id
-	router.HandleFunc("/api/usuarios/{id}", controller.DeleteUser).Methods("DELETE", "OPTIONS")
+	router.HandleFunc("/api/usuarios/{uid:.+}", controller.UpdateUser).Methods("PUT", "OPTIONS")
+	router.HandleFunc("/api/usuarios/{uid:[0-9]+}", controller.DeleteUser).Methods("DELETE", "OPTIONS")
 
 	router.HandleFunc("/api/usuarios", controller.RegistrationsHandler).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/auth/login", controller.AuthenticationsHandler).Methods("POST", "OPTIONS")
