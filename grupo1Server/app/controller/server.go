@@ -26,6 +26,7 @@ func initUserHandlers() {
 
 func initVideoHandlers() {
 	router.HandleFunc("/api/videos", controller.GetAllVideos).Methods("GET", "OPTIONS")
+	router.HandleFunc("/api/videos/padre", controller.GetAllVideosPadre).Methods("GET", "OPTIONS")
 }
 
 func Start() {

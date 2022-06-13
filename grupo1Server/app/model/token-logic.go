@@ -107,6 +107,7 @@ func ValidateToken(authToken string) (TokenDetails, error) {
 						users.id,
 						users.nombre,
 						users.rol,
+						users.padre,
 						authentication_tokens.generated_at,
 						authentication_tokens.expires_at                         
 					from authentication_tokens
@@ -125,10 +126,11 @@ func ValidateToken(authToken string) (TokenDetails, error) {
 	userId := 0
 	username := ""
 	userrol := ""
+	userPadre := ""
 	generatedAt := ""
 	expiresAt := ""
 
-	err = stmt.QueryRow(authToken).Scan(&userId, &username, &userrol, &generatedAt, &expiresAt)
+	err = stmt.QueryRow(authToken).Scan(&userId, &username, &userrol, &userPadre, &generatedAt, &expiresAt)
 
 	if err != nil {
 
@@ -152,6 +154,7 @@ func ValidateToken(authToken string) (TokenDetails, error) {
 		UID:    uint64(userId),
 		NOMBRE: username,
 		ROL:    userrol,
+		PADRE:  userPadre,
 	}
 
 	UserToken = TokenDetails{
