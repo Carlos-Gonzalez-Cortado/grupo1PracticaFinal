@@ -16,16 +16,22 @@ func initUserHandlers() {
 	router.HandleFunc("/api/usuario/{uid}", controller.GetUser).Methods("GET", "OPTIONS")
 
 	//	router.HandleFunc("/api/usuarios", controller.CreateUser).Methods("POST")
-	router.HandleFunc("/api/modificar", controller.UpdateUser).Methods("PUT", "OPTIONS")
+	router.HandleFunc("/api/usuarios/{id}", controller.UpdateUser).Methods("PUT", "OPTIONS") //añadir lo del id
 	router.HandleFunc("/api/usuarios/{id}", controller.DeleteUser).Methods("DELETE", "OPTIONS")
 
-	router.HandleFunc("/api/registrar", controller.RegistrationsHandler).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/autentificar", controller.AuthenticationsHandler).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/usuarios", controller.RegistrationsHandler).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/auth/login", controller.AuthenticationsHandler).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/validar", controller.ValidateTokenHandler).Methods("POST", "OPTIONS")
 }
 
 func initVideoHandlers() {
 	router.HandleFunc("/api/videos", controller.GetAllVideos).Methods("GET", "OPTIONS")
+	router.HandleFunc("/api/videos/padre", controller.GetAllVideosPadre).Methods("GET", "OPTIONS")
+}
+
+func initCategoryHandlers() {
+	router.HandleFunc("/api/categorias", controller.GetAllCategories).Methods("GET", "OPTIONS")
+	router.HandleFunc("/api/categorias/padre", controller.GetAllCategoriesPadre).Methods("GET", "OPTIONS")
 }
 
 func Start() {
@@ -33,6 +39,7 @@ func Start() {
 
 	initUserHandlers()
 	initVideoHandlers()
+	initCategoryHandlers()
 	fmt.Printf("router initialized and listening on 3200\n")
 	log.Fatal(http.ListenAndServe(":3200", router))
 }

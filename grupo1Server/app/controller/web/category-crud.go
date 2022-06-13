@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func GetAllVideos(w http.ResponseWriter, r *http.Request) {
+func GetAllCategories(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
 		eneableCors(&w)
@@ -20,7 +20,6 @@ func GetAllVideos(w http.ResponseWriter, r *http.Request) {
 		if !TokenCheck(w, r) {
 			fmt.Print("Invalid Token")
 		} else {
-
 			limite := "5"
 			desde := "0"
 
@@ -36,19 +35,19 @@ func GetAllVideos(w http.ResponseWriter, r *http.Request) {
 				desde = desdeGet[0]
 			}
 
-			videos, err := model.GetAllVideos(limite, desde)
+			categories, err := model.GetAllCategories(limite, desde)
 
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 			} else {
-				json.NewEncoder(w).Encode(videos)
+				json.NewEncoder(w).Encode(categories)
 			}
 		}
 	}
 }
 
-func GetAllVideosPadre(w http.ResponseWriter, r *http.Request) {
+func GetAllCategoriesPadre(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
 		eneableCors(&w)
@@ -85,13 +84,13 @@ func GetAllVideosPadre(w http.ResponseWriter, r *http.Request) {
 			desde = desdeGet[0]
 		}
 
-		videos, err := model.GetAllVideosPadre(userPadre, limite, desde)
+		categories, err := model.GetAllCategoriesPadre(userPadre, limite, desde)
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 		} else {
-			json.NewEncoder(w).Encode(videos)
+			json.NewEncoder(w).Encode(categories)
 		}
 	}
 }
