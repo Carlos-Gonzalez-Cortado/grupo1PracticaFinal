@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
             }
         },
         err => {
+          alert(err.error.text);
             console.log(err);
         }
     );

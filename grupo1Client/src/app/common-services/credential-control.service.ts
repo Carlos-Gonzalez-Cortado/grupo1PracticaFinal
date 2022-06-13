@@ -13,7 +13,7 @@ export class CredentialControlService {
 
   url = Config.address + ':' + Config.port;
   urlLogin = this.url + '/api/auth/login';
-  urlGetVideosAdmin = this.url + '/api/videos?limite=1&desde=0';
+  urlGetVideosAdmin = this.url + '/api/videos?limite=1&desde=0'; 
   urlGetVideosUser = this.url + '/api/videos/padre?limite=1&desde=0';
   urlFull = this.urlGetVideosAdmin;
 
@@ -30,7 +30,7 @@ export class CredentialControlService {
   sendCredential(email: string, password: string) {
 
     const body_content = {
-      "correo": email,
+      "nombre": email,
       "password": password
     }
 
