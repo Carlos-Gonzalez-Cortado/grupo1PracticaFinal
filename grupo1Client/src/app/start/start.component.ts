@@ -39,7 +39,7 @@ export class StartComponent implements OnInit {
     this.cred.checkCredential().subscribe(
       res => {
         this.total = res['total'];
-        console.log('Token is still valid.');
+        console.log('Token is still valid. Total: ' + this.total);
         this.getVideoList();
         this.getCategoryList();
       },

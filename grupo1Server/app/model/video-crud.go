@@ -12,7 +12,6 @@ func GetAllVideos(limite string, desde string) (Videos, error) {
 	var productos []Productos
 	var user User
 	var categoria Tipos
-	videoCount := 0
 
 	query := `select id, name, url, user_id, category_id from videos limit ` + desde + `, ` + limite + `;`
 
@@ -99,18 +98,40 @@ func GetAllVideos(limite string, desde string) (Videos, error) {
 			return videos, errCat
 		}
 
+		/// -->
+		queryCount := `select count(*) from videos;`
+
+		stmtCount, errCount := db.Prepare(queryCount)
+
+		if errCount != nil {
+			fmt.Print("There is a problem in the video count")
+		}
+
+		defer stmtCount.Close()
+
+		videoCount := 0
+
+		errCount = stmtCount.QueryRow().Scan(&videoCount)
+
+		if errCount != nil {
+			fmt.Print("There is a problem in the video count")
+		}
+
+		/// <-
+
 		user = User{
 			UID:    uint64(userId),
 			NOMBRE: userName,
 		}
 
 		categoria = Tipos{
-			_ID:    uint64(catId),
-			NOMBRE: catName,
+			ID:      uint64(catId),
+			NOMBRE:  catName,
+			USUARIO: user,
 		}
 
 		producto := Productos{
-			_ID:       uint64(videoId),
+			ID:        uint64(videoId),
 			NOMBRE:    videoName,
 			USUARIO:   user,
 			CATEGORIA: categoria,
@@ -119,7 +140,8 @@ func GetAllVideos(limite string, desde string) (Videos, error) {
 
 		productos = append(productos, producto)
 
-		videoCount++
+		//videoCount++
+
 		videos = Videos{
 			TOTAL:     uint64(videoCount),
 			PRODUCTOS: productos,
@@ -236,12 +258,12 @@ func GetAllVideosPadre(padre string, limite string, desde string) (Videos, error
 		}
 
 		categoria = Tipos{
-			_ID:    uint64(catId),
+			ID:     uint64(catId),
 			NOMBRE: catName,
 		}
 
 		producto := Productos{
-			_ID:       uint64(videoId),
+			ID:        uint64(videoId),
 			NOMBRE:    videoName,
 			USUARIO:   user,
 			CATEGORIA: categoria,

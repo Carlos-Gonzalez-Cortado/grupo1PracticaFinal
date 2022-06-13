@@ -66,7 +66,7 @@ func GetAllCategories(limite, desde string) (Categorias, error) {
 		}
 
 		tipo := Tipos{
-			_ID:     catId,
+			ID:      catId,
 			NOMBRE:  catName,
 			USUARIO: user,
 		}
@@ -160,7 +160,7 @@ func GetAllCategoriesPadre(padre, limite, desde string) (Categorias, error) {
 		}
 
 		tipo := Tipos{
-			_ID:     catId,
+			ID:      catId,
 			NOMBRE:  catName,
 			USUARIO: user,
 		}

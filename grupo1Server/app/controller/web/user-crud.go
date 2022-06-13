@@ -96,17 +96,35 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		if !TokenCheck(w, r) {
 			fmt.Print("Invalid Token")
 		} else {
+
 			w.Header().Set("Content-Type", "application/json")
 			eneableCors(&w)
 
-			decoder := json.NewDecoder(r.Body)
-			var user model.User
-			err := decoder.Decode(&user)
-			if err != nil {
+			/// ->
+			param := mux.Vars(r)
+			idStr := param["id"]
+			id, errParse := strconv.ParseUint(idStr, 10, 64)
+
+			if errParse != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				w.Write([]byte(errParse.Error()))
 				return
 			}
+			/// <-
+
+			decoder := json.NewDecoder(r.Body)
+			var user model.User
+			errDec := decoder.Decode(&user)
+
+			if errDec != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(errDec.Error()))
+				return
+			}
+
+			/// ->
+			user.UID = id
+			/// <-
 
 			updatedUser, err := model.UpdateUser(user)
 			if err != nil {

@@ -191,7 +191,19 @@ export class AdminComponent implements OnInit {
 
   //Get video per category
   categoryCount(id: string) {
-    return this.videoList.filter(x => x.categoria._id.includes(id)).length;
+    console.log();
+    
+    return this.videoList.filter(x => 
+      { 
+        let works : boolean;
+        try {
+          works = x.categoria._id.includes(id);
+        }
+        catch {
+          works =  x.categoria._id == id;
+        }
+        return works;
+      }).length;
   }
 
   /*

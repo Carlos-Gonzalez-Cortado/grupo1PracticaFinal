@@ -16,7 +16,7 @@ type Videos struct {
 }
 
 type Productos struct {
-	_ID       uint64 `json:"_id"`
+	ID        uint64 `json:"_id"`
 	NOMBRE    string `json:"nombre"`
 	USUARIO   User   `json:"usuario"`
 	CATEGORIA Tipos  `json:"categoria"`
@@ -29,7 +29,7 @@ type Categorias struct {
 }
 
 type Tipos struct {
-	_ID     uint64 `json:"_id"`
+	ID      uint64 `json:"_id"`
 	NOMBRE  string `json:"nombre"`
 	USUARIO User   `json:"usuario"`
 }
