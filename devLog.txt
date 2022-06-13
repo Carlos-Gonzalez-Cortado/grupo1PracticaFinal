@@ -1,4 +1,5 @@
-SPRINT-PLANNING: 24/MAYO/2022
+SPRINT-PLANNING: 24/MAYO/2022 - 27/MAYO/2022
     -Preparando todos los entornos de desarollo tanto de la parte de cliente como la de servidor.
     -Estimamos que en 2 día de trabajo estará listo. 
-    
+SPRINT 1: 28/MAYO/2022
+	-Desarrollo en paralelo del front y el back de la aplicación. 

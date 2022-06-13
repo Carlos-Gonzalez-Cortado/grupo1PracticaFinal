@@ -1,0 +1,136 @@
+html,
+body {
+  height: 100%;
+}
+
+:root{
+  --body-color: #c5e1d4;
+  --primary-color: #198754;
+  --primary-color-light: #F6F5FF;
+  --sidebar-color: #8cc3a9;
+}
+
+/*===============Cambio de tema==============*/
+#tema{
+  cursor: pointer;
+}
+
+.redtema{
+  --body-color: #ffbfb0; 
+  --sidebar-color: #ff9688;
+  --primary-color: #ff6961;
+}
+
+.yellowtema{
+  --body-color: #fce2aa;
+  --sidebar-color: #face71;
+  --primary-color: #f7b11c;
+}
+/*===========================================*/ 
+main .btn{
+  background-color: var(--primary-color);
+  border: none
+}
+
+main .btn:hover{
+  background-color: var(--primary-color);
+  opacity: 75%;
+}
+
+.text-center{
+  background-color: var(--body-color);
+}
+
+.text-center .form-signin .form-floating .form-control{
+  background-color: var(--sidebar-color);
+  border: none;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  height: -webkit-fill-available;
+  padding-top: 10%;
+  margin: auto;
+}
+
+.mb-4{
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/*=====footer=======*/
+footer{
+    position: fixed;
+    bottom: 3em;
+    margin: auto;
+    width: 100%;
+}
+
+
+.footer-ul {
+  display: inline-grid;
+  grid-auto-flow: row;
+  grid-gap: 24px;
+  justify-items: center;
+  margin: auto;
+  list-style-type: none;
+}
+
+@media (min-width: 500px) {
+ .footer-ul {
+    grid-auto-flow: column;
+  }
+}
+
+.footer-a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-a:hover{
+  color: var(--primary-color);
+}
+
+.frog:hover{
+  animation: jump 0.3s infinite;
+}
+
+@keyframes jump {
+  0%{
+    transform: translateY(0%);
+  }
+  25% {
+    transform: translateY(-25%);
+  }
+  50% {
+    transform: translateY(-50%);
+  }
+  75%{
+    transform: translateY(-25%);
+  }
+  100%{
+    transform: translateY(0%)
+  }
+}
+
+
+
+
+
