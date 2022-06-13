@@ -71,9 +71,8 @@ export class UserCrudService {
     const body = {
       'nombre': nombre,
       'correo': correo,
-      'password': password,
-      'uid': id
-    }
+      'password': password
+    }    
 
     return this.http.put(this.urlEditUser + id, body, httpOptions);
   }

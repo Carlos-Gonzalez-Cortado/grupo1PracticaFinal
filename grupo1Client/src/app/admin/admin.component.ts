@@ -24,6 +24,7 @@ export class AdminComponent implements OnInit {
   filteredUserList: Array<User> = [];
   totalVideos: number = 0;
   theme: number = 1;
+
   constructor(private cred: CredentialControlService,
     private videoCrud: VideoCrudServiceService,
     private catCrud: CategoryCrudServiceService,
@@ -97,6 +98,8 @@ export class AdminComponent implements OnInit {
     this.userCrud.getUsers().subscribe(
       res => {
         this.userList = res['usuarios'];
+        console.log(this.userList);
+        
         this.filteredUserList = this.userList;
         console.log(res);
       },
@@ -144,20 +147,45 @@ export class AdminComponent implements OnInit {
 
   //Set active parameters in edit
   setEditUser(id: string, nameElement: HTMLInputElement, emailElement: HTMLInputElement) {
-    let selectedUser = this.userList.filter(x => x.uid.includes(id))[0];
+    let selectedUser = this.userList.filter(x => 
+      {
+        let works = false;
+        try
+        { works = x.uid.includes(id)}
+        catch
+        { works = x.uid.toString().includes(id)}
+        return works;
+      }
+      )[0];
     nameElement.value = selectedUser.nombre;
     emailElement.value = selectedUser.correo
   }
 
   setEditVideo(id: string, nameElement: HTMLInputElement, urlElement: HTMLInputElement, categoryElement: HTMLSelectElement) {
-    let selectedVideo = this.videoList.filter(x => x._id.includes(id))[0];
+    let selectedVideo = this.videoList.filter(x => 
+      { let works = false;
+      try
+      { works = x._id.includes(id)}
+      catch
+      { works = x._id.toString().includes(id)}
+      return works;
+    })[0];
     nameElement.value = selectedVideo.nombre;
     urlElement.value = selectedVideo.url;
-    categoryElement.value = selectedVideo.categoria._id;
+    try
+    {categoryElement.value = selectedVideo.categoria._id;}
+    catch
+    {categoryElement.value = selectedVideo.categoria._id.toString()}
   }
 
   setEditCategory(id: string, nameElement: HTMLInputElement) {
-    let selectedCategory = this.categoryList.filter(x => x._id.includes(id))[0];
+    let selectedCategory = this.categoryList.filter(x => { let works = false;
+      try
+      { works = x._id.includes(id)}
+      catch
+      { works = x._id.toString().includes(id)}
+      return works;
+    })[0];
     nameElement.value = selectedCategory.nombre;
   }
 
@@ -312,11 +340,11 @@ export class AdminComponent implements OnInit {
       res => {
         alert('Se ha modificado la información satisfactoriamente.');
         this.getUserList();
-        console.log(res);
       },
       err => {
         alert('Connection failed. Check console log for details.');
         console.log(err);
+        
       }
     )
   }
