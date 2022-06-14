@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
             if (res.hasOwnProperty('token')) {
               localStorage.setItem('Token', res['token']);
               localStorage.setItem('Role', res['usuario'].rol);
+              localStorage.setItem('UID', res['usuario'].uid);
               location.assign('/Start')
             }
         },

@@ -194,7 +194,7 @@
                 <p class="input-label" for="form-categoria" style="margin-top: 1em;" >Categoría:</p>
                 <div class="select" id="div-form-categoria-videos" >
                     <select id="form-categoria-videos" #crear_video_categoria>
-                         <option [value]="c._id" *ngFor="let c of categoryList" >{{ c.nombre }}</option>
+                         <option [value]="c._id" *ngFor="let c of currentUserCategories" >{{ c.nombre }}</option>
                     </select>
                     <span class="focus"></span>
                 </div>
@@ -216,7 +216,7 @@
                 <p class="input-label" for="form-categoria" style="margin-top: 1em;">Categorías actuales:</p>
                 <div class = "select" id="div-form-categoria-categoria" >
                     <select id="form-categoria-categoria" >
-                        <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
+                        <option [value]="c._id" *ngFor="let c of currentUserCategories">{{ c.nombre }}</option>
                     </select>
                     <span class="focus"></span>
                 </div>
@@ -271,7 +271,7 @@
                     <input id="mod-input-url" class="form-input-mod" type="url" placeholder="URL" #edit_video_url>
                     <div class = "select" id="mod-div-video-categoria" style="margin-bottom: 1em; margin-left: 0.75;">
                         <select id="mod-video-categoria" #video_edit_category>
-                            <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
+                            <option [value]="c._id" *ngFor="let c of currentUserCategories">{{ c.nombre }}</option>
                         </select>
                         <span class="focus"></span>
                     </div>
@@ -285,7 +285,7 @@
                 <form class="form-inputs">
                     <div class = "select" id="mod-div-id-categoria" style="margin-bottom: 1em; margin-left: 0.75;">
                         <select id="mod-id-categoria" (change)="setEditCategory(edit_categoria_id.value, edit_categoria_nombre)" #edit_categoria_id>
-                            <option [value]="c._id" *ngFor="let c of categoryList">{{ c.nombre }}</option>
+                            <option [value]="c._id" *ngFor="let c of currentUserCategories">{{ c.nombre }}</option>
                         </select>
                         <span class="focus"></span>
                     </div>

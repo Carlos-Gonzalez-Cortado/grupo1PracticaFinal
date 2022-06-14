@@ -22,6 +22,8 @@ export class AdminComponent implements OnInit {
   filteredVideoList: Array<VideosInterface> = [];
   filteredCategoryList: Array<Category> = [];
   filteredUserList: Array<User> = [];
+  currentUserCategories: Array<Category> = [];
+  currentUserUID: any = localStorage.getItem("UID");
   totalVideos: number = 0;
   theme: number = 1;
 
@@ -51,7 +53,10 @@ export class AdminComponent implements OnInit {
     this.cred.checkCredential().subscribe(
       res => {
         this.totalVideos = res['total'];
+        if (!localStorage.getItem("Role")?.includes("ADMIN")) 
+          this.cred.logOut();
         console.log('Token is still valid.');
+
         this.getVideoList();
         this.getCategoryList();
         this.getUserList();
@@ -86,6 +91,11 @@ export class AdminComponent implements OnInit {
       res => {
         this.categoryList = res['categorias'];
         this.filteredCategoryList = this.categoryList;
+        this.currentUserCategories = this.categoryList.filter(x => {
+            return x.usuario.uid.includes(this.currentUserUID);
+        });
+        console.log(this.currentUserCategories);
+        
         console.log(res);
       },
       err => {
@@ -221,6 +231,10 @@ export class AdminComponent implements OnInit {
   categoryCount(id: string) {
     console.log();
     
+    if(this.videoList == null){
+      return 0
+    }
+
     return this.videoList.filter(x => 
       { 
         let works : boolean;
