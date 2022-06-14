@@ -149,7 +149,7 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 			}
 
 			userId := tokenDetails.USUARIO.UID
-			if userId < 0 {
+			if userId == "" {
 				fmt.Print("The user is no valid")
 			}
 
@@ -209,7 +209,7 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 			}
 
 			/// ->
-			categoria.ID = id
+			categoria.ID = strconv.FormatUint(id, 10)
 			/// <-
 
 			updatedCategory, err := model.UpdateCategory(categoria)

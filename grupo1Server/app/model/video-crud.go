@@ -24,7 +24,7 @@ func GetAllVideos(limite string, desde string) (Videos, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		videoId := 0
+		videoId := ""
 		videoName := ""
 		videoUrl := ""
 		var user_id uint64 = 0
@@ -53,7 +53,7 @@ func GetAllVideos(limite string, desde string) (Videos, error) {
 
 		defer stmtUser.Close()
 
-		userId := 0
+		userId := ""
 		userName := ""
 
 		errUser = stmtUser.QueryRow().Scan(&userId, &userName)
@@ -82,7 +82,7 @@ func GetAllVideos(limite string, desde string) (Videos, error) {
 
 		defer stmtCat.Close()
 
-		catId := 0
+		catId := ""
 		catName := ""
 
 		fmt.Println("* Me he quedado justo antes del scan de categorias")
@@ -120,18 +120,18 @@ func GetAllVideos(limite string, desde string) (Videos, error) {
 		/// <-
 
 		user = User{
-			UID:    uint64(userId),
+			UID:    userId,
 			NOMBRE: userName,
 		}
 
 		categoria = Tipos{
-			ID:      uint64(catId),
+			ID:      catId,
 			NOMBRE:  catName,
 			USUARIO: user,
 		}
 
 		producto := Productos{
-			ID:        uint64(videoId),
+			ID:        videoId,
 			NOMBRE:    videoName,
 			USUARIO:   user,
 			CATEGORIA: categoria,
@@ -168,10 +168,10 @@ func GetAllVideosPadre(padre string, limite string, desde string) (Videos, error
 	defer rows.Close()
 
 	for rows.Next() {
-		videoId := 0
+		videoId := ""
 		videoName := ""
 		videoUrl := ""
-		var user_id uint64 = 0
+		user_id := ""
 		var category_id uint64 = 0
 
 		err := rows.Scan(&videoId, &videoName, &videoUrl, &user_id, &category_id)
@@ -186,7 +186,7 @@ func GetAllVideosPadre(padre string, limite string, desde string) (Videos, error
 		}
 
 		// Query para sacar los datos del usuario relacionados con el vídeo
-		queryUser := `select id, nombre from users where id =` + strconv.FormatUint(user_id, 10) + `;`
+		queryUser := `select id, nombre from users where id =` + user_id + `;`
 
 		stmtUser, errUser := db.Prepare(queryUser)
 
@@ -196,7 +196,7 @@ func GetAllVideosPadre(padre string, limite string, desde string) (Videos, error
 
 		defer stmtUser.Close()
 
-		userId := 0
+		userId := ""
 		userName := ""
 
 		errUser = stmtUser.QueryRow().Scan(&userId, &userName)
@@ -220,7 +220,7 @@ func GetAllVideosPadre(padre string, limite string, desde string) (Videos, error
 
 		defer stmtCat.Close()
 
-		catId := 0
+		catId := ""
 		catName := ""
 
 		errCat = stmtCat.QueryRow().Scan(&catId, &catName)
@@ -253,17 +253,17 @@ func GetAllVideosPadre(padre string, limite string, desde string) (Videos, error
 		}
 
 		user = User{
-			UID:    uint64(userId),
+			UID:    userId,
 			NOMBRE: userName,
 		}
 
 		categoria = Tipos{
-			ID:     uint64(catId),
+			ID:     catId,
 			NOMBRE: catName,
 		}
 
 		producto := Productos{
-			ID:        uint64(videoId),
+			ID:        videoId,
 			NOMBRE:    videoName,
 			USUARIO:   user,
 			CATEGORIA: categoria,
@@ -292,7 +292,7 @@ func DeleteVideo(id uint64) error {
 	return nil
 }
 
-func CreateVideo(nombre string, url string, user_id uint64, category_id uint64) (SimpleVideo, error) {
+func CreateVideo(nombre string, url string, user_id string, category_id string) (SimpleVideo, error) {
 	var video SimpleVideo
 
 	queryString := "insert into videos(name, url, user_id, category_id) values (?, ?, ?, ?)"
@@ -324,7 +324,7 @@ func UpdateVideo(video SimpleVideo) (SimpleVideo, error) {
 	var updatedVideo SimpleVideo
 	var errVideo SimpleVideo
 
-	query := `select name, url, category_id from videos where id = ` + strconv.FormatUint(video.ID, 10) + `;`
+	query := `select name, url, category_id from videos where id = ` + video.ID + `;`
 
 	stmt, err := db.Prepare(query)
 
@@ -336,7 +336,7 @@ func UpdateVideo(video SimpleVideo) (SimpleVideo, error) {
 
 	videoName := ""
 	videoUrl := ""
-	videoCategory := 0
+	videoCategory := ""
 
 	err = stmt.QueryRow().Scan(&videoName, &videoUrl, &videoCategory)
 
@@ -355,8 +355,8 @@ func UpdateVideo(video SimpleVideo) (SimpleVideo, error) {
 		video.URL = videoUrl
 	}
 
-	if video.CATEGORIA < 0 {
-		video.CATEGORIA = uint64(videoCategory)
+	if video.CATEGORIA == "" {
+		video.CATEGORIA = videoCategory
 	}
 
 	updatedVideo = SimpleVideo{
@@ -365,7 +365,7 @@ func UpdateVideo(video SimpleVideo) (SimpleVideo, error) {
 		CATEGORIA: video.CATEGORIA,
 	}
 
-	query_update := `update videos set name = "` + updatedVideo.NOMBRE + `",` + `url = "` + updatedVideo.URL + `",` + `category_id = "` + strconv.FormatUint(updatedVideo.CATEGORIA, 10) + `" where id =` + strconv.FormatUint(video.ID, 10) + `;`
+	query_update := `update videos set name = "` + updatedVideo.NOMBRE + `",` + `url = "` + updatedVideo.URL + `",` + `category_id = "` + updatedVideo.CATEGORIA + `" where id =` + video.ID + `;`
 
 	_, errUpdate := db.Exec(query_update)
 

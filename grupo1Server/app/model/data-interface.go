@@ -12,7 +12,7 @@ type User struct {
 	PASSWORD string `json:"password"`
 	ESTADO   uint64 `json:"estado"`
 	PADRE    string `json:"padre"`
-	UID      uint64 `json:"uid"`
+	UID      string `json:"uid"`
 }
 
 type Videos struct {
@@ -21,7 +21,7 @@ type Videos struct {
 }
 
 type Productos struct {
-	ID        uint64 `json:"_id"`
+	ID        string `json:"_id"`
 	NOMBRE    string `json:"nombre"`
 	USUARIO   User   `json:"usuario"`
 	CATEGORIA Tipos  `json:"categoria"`
@@ -29,10 +29,10 @@ type Productos struct {
 }
 
 type SimpleVideo struct {
-	ID        uint64 `json:"_id"`
+	ID        string `json:"_id"`
 	NOMBRE    string `json:"nombre"`
-	USUARIO   uint64 `json:"usuario"`
-	CATEGORIA uint64 `json:"categoria"`
+	USUARIO   string `json:"usuario"`
+	CATEGORIA string `json:"categoria"`
 	URL       string `json:"url"`
 }
 
@@ -42,7 +42,7 @@ type Categorias struct {
 }
 
 type Tipos struct {
-	ID      uint64 `json:"_id"`
+	ID      string `json:"_id"`
 	NOMBRE  string `json:"nombre"`
 	USUARIO User   `json:"usuario"`
 }

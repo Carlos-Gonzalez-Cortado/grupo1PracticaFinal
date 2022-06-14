@@ -120,7 +120,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			}
 
 			/// ->
-			user.UID = id
+			user.UID = strconv.FormatUint(id, 10)
 			/// <-
 
 			updatedUser, err := model.UpdateUser(user)
@@ -184,6 +184,18 @@ func RegistrationsHandler(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			eneableCors(&w)
 
+			authToken := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
+
+			tokenDetails, errUser := model.ValidateToken(authToken)
+
+			if errUser != nil {
+				fmt.Print("Invalid Token")
+			}
+
+			userId := tokenDetails.USUARIO.UID
+			if userId == "" {
+				fmt.Print("The user is no valid")
+			}
 			dec := json.NewDecoder(r.Body)
 			var user model.User
 			err := dec.Decode(&user)
@@ -196,7 +208,7 @@ func RegistrationsHandler(w http.ResponseWriter, r *http.Request) {
 			if user.NOMBRE == "" || user.CORREO == "" || user.PASSWORD == "" {
 				fmt.Fprintf(w, "Please enter a valid username and password.\r\n")
 			} else {
-				response, err := model.CreateUser(user.NOMBRE, user.CORREO, user.PASSWORD)
+				response, err := model.CreateUser(user.NOMBRE, user.CORREO, user.PASSWORD, userId)
 				if err != nil {
 					fmt.Fprintf(w, err.Error())
 				} else {
