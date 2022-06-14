@@ -22,9 +22,9 @@ func GetAllCategories(limite, desde string) (Categorias, error) {
 	}
 
 	for rows.Next() {
-		var catId uint64 = 0
+		catId := ""
 		catName := ""
-		var catUser_id uint64 = 0
+		catUser_id := ""
 
 		err := rows.Scan(&catId, &catName, &catUser_id)
 
@@ -37,7 +37,7 @@ func GetAllCategories(limite, desde string) (Categorias, error) {
 			return categorias, err
 		}
 
-		queryUser := `select nombre from users where id = ` + strconv.FormatUint(catUser_id, 10) + `;`
+		queryUser := `select nombre from users where id = ` + catUser_id + `;`
 
 		stmtUser, errUser := db.Prepare(queryUser)
 
@@ -98,9 +98,9 @@ func GetAllCategoriesPadre(padre, limite, desde string) (Categorias, error) {
 	}
 
 	for rows.Next() {
-		var catId uint64 = 0
+		catId := ""
 		catName := ""
-		var catUser_id uint64 = 0
+		catUser_id := ""
 
 		err := rows.Scan(&catId, &catName, &catUser_id)
 
@@ -113,7 +113,7 @@ func GetAllCategoriesPadre(padre, limite, desde string) (Categorias, error) {
 			return categorias, err
 		}
 
-		queryUser := `select nombre from users where id = ` + strconv.FormatUint(catUser_id, 10) + `;`
+		queryUser := `select nombre from users where id = ` + catUser_id + `;`
 
 		stmtUser, errUser := db.Prepare(queryUser)
 
@@ -188,7 +188,7 @@ func DeleteCategory(id uint64) error {
 	return nil
 }
 
-func CreateCategory(nombre string, userId uint64) (Tipos, error) {
+func CreateCategory(nombre string, userId string) (Tipos, error) {
 	var categoria Tipos
 
 	queryString := "insert into categories(name, user_id) values (?, ?)"
@@ -218,7 +218,7 @@ func UpdateCategory(categoria Tipos) (Tipos, error) {
 	var updatedCategory Tipos
 	var errCategory Tipos
 
-	query := `select name from categories where id = ` + strconv.FormatUint(categoria.ID, 10) + `;`
+	query := `select name from categories where id = ` + categoria.ID + `;`
 
 	stmt, err := db.Prepare(query)
 
@@ -247,7 +247,7 @@ func UpdateCategory(categoria Tipos) (Tipos, error) {
 		NOMBRE: categoria.NOMBRE,
 	}
 
-	query_update := `update categories set name = "` + updatedCategory.NOMBRE + `" where id =` + strconv.FormatUint(categoria.ID, 10) + `;`
+	query_update := `update categories set name = "` + updatedCategory.NOMBRE + `" where id =` + categoria.ID + `;`
 
 	_, errUpdate := db.Exec(query_update)
 

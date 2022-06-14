@@ -21,7 +21,7 @@ func GetAllUsers() (Users, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var uid uint64
+		uid := ""
 		var estado uint64
 		var nombre, correo, rol, password, padre string
 
@@ -82,7 +82,7 @@ func GetUser(uid uint64) (User, error) {
 	defer row.Close()
 
 	if row.Next() {
-		var uid uint64
+		uid := ""
 		var estado uint64
 		var nombre, correo, rol, padre string
 
@@ -121,7 +121,9 @@ func CreateUser(user User) error {
 func UpdateUser(user User) (User, error) {
 	var updatedUser User
 
-	query := `update users set nombre = "` + user.NOMBRE + `",` + `correo = "` + user.CORREO + `",` + `password = "` + user.PASSWORD + `" where id =` + strconv.FormatUint(user.UID, 10) + `;`
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.PASSWORD), 14)
+
+	query := `update users set nombre = "` + user.NOMBRE + `",` + `correo = "` + user.CORREO + `",` + `password = "` + string(hashedPassword) + `" where id =` + user.UID + `;`
 
 	_, err := db.Exec(query)
 
@@ -150,10 +152,10 @@ func DeleteUser(id uint64) error {
 	return nil
 }
 
-func CreateUser(nombre string, correo string, password string) (User, error) {
+func CreateUser(nombre string, correo string, password string, padre string) (User, error) {
 	var user User
 
-	queryString := "insert into users(nombre, correo, password) values (?, ?, ?)"
+	queryString := "insert into users(nombre, correo, password, padre) values (?, ?, ?, ?)"
 
 	stmt, err := db.Prepare(queryString)
 
@@ -165,7 +167,7 @@ func CreateUser(nombre string, correo string, password string) (User, error) {
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 
-	_, err = stmt.Exec(nombre, correo, hashedPassword)
+	_, err = stmt.Exec(nombre, correo, hashedPassword, padre)
 
 	if err != nil {
 		return user, err
@@ -175,6 +177,7 @@ func CreateUser(nombre string, correo string, password string) (User, error) {
 		NOMBRE:   nombre,
 		CORREO:   correo,
 		PASSWORD: password,
+		PADRE:    padre,
 	}
 
 	return user, nil

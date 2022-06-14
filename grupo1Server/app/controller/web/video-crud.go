@@ -150,7 +150,7 @@ func CreateVideo(w http.ResponseWriter, r *http.Request) {
 			}
 
 			userId := tokenDetails.USUARIO.UID
-			if userId < 0 {
+			if userId == "" {
 				fmt.Print("The user is no valid")
 			}
 
@@ -163,7 +163,7 @@ func CreateVideo(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			if video.NOMBRE == "" || video.URL == "" || video.CATEGORIA < 0 {
+			if video.NOMBRE == "" || video.URL == "" || video.CATEGORIA == "" {
 				fmt.Fprintf(w, "Please enter a valid video.\r\n")
 			} else {
 				response, err := model.CreateVideo(video.NOMBRE, video.URL, userId, video.CATEGORIA)
@@ -210,7 +210,7 @@ func UpdateVideo(w http.ResponseWriter, r *http.Request) {
 			}
 
 			/// ->
-			video.ID = id
+			video.ID = strconv.FormatUint(id, 10)
 			/// <-
 
 			updatedVideo, err := model.UpdateVideo(video)

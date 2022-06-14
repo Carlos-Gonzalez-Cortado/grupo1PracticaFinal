@@ -23,7 +23,7 @@ func GenerateToken(nombre string, password string) (TokenDetails, error) {
 
 	defer stmt.Close()
 
-	userId := 0
+	userId := ""
 	accountPassword := ""
 	userRol := ""
 	userEstado := 0
@@ -87,7 +87,7 @@ func GenerateToken(nombre string, password string) (TokenDetails, error) {
 		PASSWORD: accountPassword,
 		ESTADO:   uint64(userEstado),
 		PADRE:    userPadre,
-		UID:      uint64(userId),
+		UID:      userId,
 	}
 
 	tokenDetails = TokenDetails{
@@ -123,7 +123,7 @@ func ValidateToken(authToken string) (TokenDetails, error) {
 
 	defer stmt.Close()
 
-	userId := 0
+	userId := ""
 	username := ""
 	userrol := ""
 	userPadre := ""
@@ -151,7 +151,7 @@ func ValidateToken(authToken string) (TokenDetails, error) {
 	}
 
 	userDetails := User{
-		UID:    uint64(userId),
+		UID:    userId,
 		NOMBRE: username,
 		ROL:    userrol,
 		PADRE:  userPadre,
