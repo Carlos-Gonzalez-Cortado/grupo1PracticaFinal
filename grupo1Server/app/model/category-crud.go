@@ -187,3 +187,73 @@ func DeleteCategory(id uint64) error {
 
 	return nil
 }
+
+func CreateCategory(nombre string, userId uint64) (Tipos, error) {
+	var categoria Tipos
+
+	queryString := "insert into categories(name, user_id) values (?, ?)"
+
+	stmt, err := db.Prepare(queryString)
+
+	if err != nil {
+		return categoria, err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(nombre, userId)
+
+	if err != nil {
+		return categoria, err
+	}
+
+	categoria = Tipos{
+		NOMBRE: nombre,
+	}
+
+	return categoria, nil
+}
+
+func UpdateCategory(categoria Tipos) (Tipos, error) {
+	var updatedCategory Tipos
+	var errCategory Tipos
+
+	query := `select name from categories where id = ` + strconv.FormatUint(categoria.ID, 10) + `;`
+
+	stmt, err := db.Prepare(query)
+
+	if err != nil {
+		return updatedCategory, err
+	}
+
+	defer stmt.Close()
+
+	categoryName := ""
+
+	err = stmt.QueryRow().Scan(&categoryName)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return updatedCategory, errors.New("No category found")
+		}
+		return updatedCategory, err
+	}
+
+	if categoria.NOMBRE == "" {
+		categoria.NOMBRE = categoryName
+	}
+
+	updatedCategory = Tipos{
+		NOMBRE: categoria.NOMBRE,
+	}
+
+	query_update := `update categories set name = "` + updatedCategory.NOMBRE + `" where id =` + strconv.FormatUint(categoria.ID, 10) + `;`
+
+	_, errUpdate := db.Exec(query_update)
+
+	if errUpdate != nil {
+		return errCategory, errUpdate
+	}
+
+	return updatedCategory, nil
+}

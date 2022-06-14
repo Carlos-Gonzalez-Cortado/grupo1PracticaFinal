@@ -342,7 +342,7 @@ func UpdateVideo(video SimpleVideo) (SimpleVideo, error) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return updatedVideo, errors.New("No user found")
+			return updatedVideo, errors.New("No video found")
 		}
 		return updatedVideo, err
 	}

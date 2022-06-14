@@ -40,6 +40,10 @@ func initCategoryHandlers() {
 	router.HandleFunc("/api/categorias/padre", controller.GetAllCategoriesPadre).Methods("GET", "OPTIONS")
 
 	router.HandleFunc("/api/categorias/{id:[0-9]+}", controller.DeleteCategory).Methods("DELETE", "OPTIONS")
+
+	router.HandleFunc("/api/categorias", controller.CreateCategory).Methods("POST", "OPTIONS")
+
+	router.HandleFunc("/api/categorias/{id:.+}", controller.UpdateCategory).Methods("PUT", "OPTIONS")
 }
 
 func Start() {
