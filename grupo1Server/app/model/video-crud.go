@@ -279,3 +279,99 @@ func GetAllVideosPadre(padre string, limite string, desde string) (Videos, error
 	}
 	return videos, nil
 }
+
+func DeleteVideo(id uint64) error {
+	query := `delete from videos where id = ` + strconv.FormatUint(id, 10) + `;`
+
+	_, err := db.Exec(query)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CreateVideo(nombre string, url string, user_id uint64, category_id uint64) (SimpleVideo, error) {
+	var video SimpleVideo
+
+	queryString := "insert into videos(name, url, user_id, category_id) values (?, ?, ?, ?)"
+
+	stmt, err := db.Prepare(queryString)
+
+	if err != nil {
+		return video, err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(nombre, url, user_id, category_id)
+
+	if err != nil {
+		return video, err
+	}
+
+	video = SimpleVideo{
+		NOMBRE:    nombre,
+		URL:       url,
+		USUARIO:   user_id,
+		CATEGORIA: category_id,
+	}
+	return video, nil
+}
+
+func UpdateVideo(video SimpleVideo) (SimpleVideo, error) {
+	var updatedVideo SimpleVideo
+	var errVideo SimpleVideo
+
+	query := `select name, url, category_id from videos where id = ` + strconv.FormatUint(video.ID, 10) + `;`
+
+	stmt, err := db.Prepare(query)
+
+	if err != nil {
+		return updatedVideo, err
+	}
+
+	defer stmt.Close()
+
+	videoName := ""
+	videoUrl := ""
+	videoCategory := 0
+
+	err = stmt.QueryRow().Scan(&videoName, &videoUrl, &videoCategory)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return updatedVideo, errors.New("No user found")
+		}
+		return updatedVideo, err
+	}
+
+	if video.NOMBRE == "" {
+		video.NOMBRE = videoName
+	}
+
+	if video.URL == "" {
+		video.URL = videoUrl
+	}
+
+	if video.CATEGORIA < 0 {
+		video.CATEGORIA = uint64(videoCategory)
+	}
+
+	updatedVideo = SimpleVideo{
+		NOMBRE:    video.NOMBRE,
+		URL:       video.URL,
+		CATEGORIA: video.CATEGORIA,
+	}
+
+	query_update := `update videos set name = "` + updatedVideo.NOMBRE + `",` + `url = "` + updatedVideo.URL + `",` + `category_id = "` + strconv.FormatUint(updatedVideo.CATEGORIA, 10) + `" where id =` + strconv.FormatUint(video.ID, 10) + `;`
+
+	_, errUpdate := db.Exec(query_update)
+
+	if errUpdate != nil {
+		return errVideo, errUpdate
+	}
+
+	return updatedVideo, nil
+}

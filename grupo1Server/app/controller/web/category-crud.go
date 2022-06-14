@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"imports/dependencies/app/model"
 	"net/http"
+	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 func GetAllCategories(w http.ResponseWriter, r *http.Request) {
@@ -91,6 +94,37 @@ func GetAllCategoriesPadre(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(err.Error()))
 		} else {
 			json.NewEncoder(w).Encode(categories)
+		}
+	}
+}
+
+func DeleteCategory(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
+	} else {
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
+
+			param := mux.Vars(r)["id"]
+			id, err := strconv.ParseUint(param, 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			err = model.DeleteCategory(id)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			} else {
+				w.WriteHeader(http.StatusOK)
+			}
 		}
 	}
 }

@@ -28,6 +28,14 @@ type Productos struct {
 	URL       string `json:"url"`
 }
 
+type SimpleVideo struct {
+	ID        uint64 `json:"_id"`
+	NOMBRE    string `json:"nombre"`
+	USUARIO   uint64 `json:"usuario"`
+	CATEGORIA uint64 `json:"categoria"`
+	URL       string `json:"url"`
+}
+
 type Categorias struct {
 	TOTAL      uint64  `json:"total"`
 	CATEGORIAS []Tipos `json:"categorias"`

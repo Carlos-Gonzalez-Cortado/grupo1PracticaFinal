@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"imports/dependencies/app/model"
 	"net/http"
+	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 func GetAllVideos(w http.ResponseWriter, r *http.Request) {
@@ -92,6 +95,139 @@ func GetAllVideosPadre(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(err.Error()))
 		} else {
 			json.NewEncoder(w).Encode(videos)
+		}
+	}
+}
+
+func DeleteVideo(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
+	} else {
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
+
+			param := mux.Vars(r)["id"]
+			id, err := strconv.ParseUint(param, 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			err = model.DeleteVideo(id)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			} else {
+				w.WriteHeader(http.StatusOK)
+			}
+		}
+	}
+}
+
+func CreateVideo(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
+	} else {
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
+
+			authToken := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
+
+			tokenDetails, errUser := model.ValidateToken(authToken)
+
+			if errUser != nil {
+				fmt.Print("Invalid Token")
+			}
+
+			userId := tokenDetails.USUARIO.UID
+			if userId < 0 {
+				fmt.Print("The user is no valid")
+			}
+
+			dec := json.NewDecoder(r.Body)
+			var video model.SimpleVideo
+			err := dec.Decode(&video)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			if video.NOMBRE == "" || video.URL == "" || video.CATEGORIA < 0 {
+				fmt.Fprintf(w, "Please enter a valid video.\r\n")
+			} else {
+				response, err := model.CreateVideo(video.NOMBRE, video.URL, userId, video.CATEGORIA)
+				if err != nil {
+					fmt.Fprintf(w, err.Error())
+				} else {
+					enc := json.NewEncoder(w)
+					enc.SetIndent("", "  ")
+					enc.Encode(response)
+				}
+			}
+		}
+	}
+}
+
+func UpdateVideo(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization") // You can add more headers here if needed
+		eneableCors(&w)
+	} else {
+		if !TokenCheck(w, r) {
+			fmt.Print("Invalid Token")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			eneableCors(&w)
+
+			param := mux.Vars(r)["id"]
+			id, err := strconv.ParseUint(param, 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+			/// <-
+
+			decoder := json.NewDecoder(r.Body)
+			var video model.SimpleVideo
+			errDec := decoder.Decode(&video)
+
+			if errDec != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(errDec.Error()))
+				return
+			}
+
+			/// ->
+			video.ID = id
+			/// <-
+
+			updatedVideo, err := model.UpdateVideo(video)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			} else {
+				w.WriteHeader(http.StatusOK)
+
+				fmt.Print("Se supone que se ha actualizado")
+
+				enc := json.NewEncoder(w)
+				enc.SetIndent("", "  ")
+				enc.Encode(updatedVideo)
+
+			}
 		}
 	}
 }

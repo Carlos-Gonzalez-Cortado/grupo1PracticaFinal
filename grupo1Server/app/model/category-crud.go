@@ -174,5 +174,16 @@ func GetAllCategoriesPadre(padre, limite, desde string) (Categorias, error) {
 	}
 
 	return categorias, nil
+}
 
+func DeleteCategory(id uint64) error {
+	query := `delete from categories where id = ` + strconv.FormatUint(id, 10) + `;`
+
+	_, err := db.Exec(query)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
