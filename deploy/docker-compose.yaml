@@ -1,0 +1,58 @@
+version: "2"
+services:
+  grupo1_sv:
+    image: lscr.io/linuxserver/nginx:latest
+    container_name: grupo1_sv
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /media/grupo1/server:/config
+    ports:
+      - 80:80
+    restart: unless-stopped
+    depends_on:
+      - grupo1_db
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.2
+
+  grupo1_db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: grupo1_db
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MYSQL_ROOT_PASSWORD=M4ri4DB
+      - TZ=Europe/London
+      - MYSQL_DATABASE=grupo1
+      - MYSQL_USER=grupo1
+      - MYSQL_PASSWORD=M@ri@DB
+    volumes:
+      - /media/grupo1/db:/config
+    restart: unless-stopped
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.3
+    
+    
+  grupo1_api:
+    build: ./golang/.
+    container_name: grupo1_api
+    ports:
+      - 3200:3200
+    restart: unless-stopped
+    depends_on:
+      - grupo1_sv
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.4
+        
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          ip_range: 172.28.5.0/24
+
