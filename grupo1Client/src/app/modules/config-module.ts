@@ -1,4 +1,4 @@
 export class Config{
-    public static address:string = 'http://192.168.195.3';
+    public static address:string = 'http://tmmranger.dedyn.io';
     public static port:string = '3200';
 }
