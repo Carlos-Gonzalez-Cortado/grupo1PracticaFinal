@@ -1,6 +1,0 @@
-SPRINT-PLANNING: 24/MAYO/2022 - 27/MAYO/2022
-    -Preparando todos los entornos de desarollo tanto de la parte de cliente como la de servidor.
-SPRINT 1: 28/MAYO/2022 - 12/JUNIO/2022
-	-Desarrollo en paralelo del front y el back de la aplicación. 
-SPRINT 2: 13/JUNIO/2022 - 15/JUNIO/2022
-    -Deploy de la aplicación en Docker.
